@@ -3,6 +3,9 @@
 ## 마일스톤
 - 링크: https://docs.google.com/spreadsheets/d/1AoTCf-ci0pSb1YV-3ZUueVK0tHVjIhNj6dZVdVwsu7Q/edit?gid=1115838130#gid=1115838130
 
+## ERD
+- 링크: https://dbdiagram.io/d/E-Commerce-677693835406798ef71c8c95
+
 ## 요구사항 분석
 ```js
 참고 사항
