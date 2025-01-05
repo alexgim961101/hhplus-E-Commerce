@@ -1,0 +1,12 @@
+model User {
+  id    Int @id @default(autoincrement())
+  points Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  PointHistory PointHistory[]
+
+  orders Order[]
+
+  couponHistories CouponHistory[]
+}

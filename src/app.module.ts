@@ -1,19 +1,12 @@
 import { Module } from "@nestjs/common";
-import { PointController } from "./presentation/point/controller/point.controller";
-import { CouponController } from "./presentation/coupon/controller/coupon.controller";
-import { ProductController } from "./presentation/product/controller/product.controller";
-import { PaymentController } from "./presentation/payment/controller/payment.controller";
-import { OrderController } from "./presentation/order/controller/order.controller";
+import { ConfigModule } from "@nestjs/config";
+import { PrismaModule } from "../prisma/prisma.module";
+import { UserModule } from "./user/user.module";
+
 
 @Module({
-  imports: [],
-  controllers: [
-    PointController,
-    CouponController,
-    ProductController,
-    PaymentController,
-    OrderController,
-  ],
+  imports: [ConfigModule.forRoot(), PrismaModule, UserModule],
+  controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {} 

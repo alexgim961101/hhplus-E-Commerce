@@ -1,0 +1,21 @@
+enum DiscountType {
+    PERCENTAGE
+    FIXED
+}
+
+model Coupon {
+    id        Int      @id @default(autoincrement())
+    title      String
+    description String
+    discountType DiscountType
+    discountAmount  Int
+    validFrom DateTime
+    validTo DateTime
+    maxCount Int
+    currentCount Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    orders Order[]
+    couponHistories CouponHistory[]
+}

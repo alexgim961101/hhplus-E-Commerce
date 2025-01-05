@@ -1,0 +1,25 @@
+enum OrderStatus {
+    PENDING
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+    RETURNED
+}
+
+model Order {
+    id        Int      @id @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int
+    coupon    Coupon   @relation(fields: [couponId], references: [id])
+    couponId  Int
+    orderSubtotal Int
+    discount Int
+    orderTotal Int
+    orderStatus OrderStatus
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    orderItems OrderItem[]
+    payments Payment[]
+}

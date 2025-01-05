@@ -1,0 +1,10 @@
+model PointHistory {
+    id        Int      @id @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int
+    points    Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    pointPaymentLinks PointPaymentLink[]
+}

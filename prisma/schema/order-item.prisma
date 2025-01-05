@@ -1,0 +1,11 @@
+model OrderItem {
+    id        Int      @id @default(autoincrement())
+    order     Order    @relation(fields: [orderId], references: [id])
+    orderId   Int
+    item      Item     @relation(fields: [itemId], references: [id])
+    itemId    Int
+    quantity  Int
+    itemTotal Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
