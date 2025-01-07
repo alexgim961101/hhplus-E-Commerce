@@ -3,10 +3,10 @@ import { CreateUserDto } from "../presentation/dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 
 export interface UserRepositoryInterface {
-    findById(id: number): Promise<User | null>;
+    findById(id: number, tx?: any): Promise<User | null>;
     findAll(): Promise<User[]>;
     create(createUserDto: CreateUserDto): Promise<User>;
-    update(userId: number, updateUserDto: UpdateUserDto): Promise<User>;
+    update(userId: number, updateUserDto: UpdateUserDto, tx?: any): Promise<User>;
     delete(id: number): Promise<void>;
 }
 

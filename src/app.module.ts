@@ -4,6 +4,7 @@ import * as Joi from "joi";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
 import { PointModule } from "./point/point.module";
+import { CommonModule } from "./common/common.module";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -14,6 +15,7 @@ import { PointModule } from "./point/point.module";
         }),
     }),
     PrismaModule,
+    CommonModule,
     UserModule,
     PointModule
   ],

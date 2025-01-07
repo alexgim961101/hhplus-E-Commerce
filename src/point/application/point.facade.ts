@@ -3,19 +3,24 @@ import { PointService } from "../domain/point.service";
 import { UserService } from "src/user/domain/user.service";
 import { ChargePointReqDto } from "../presentation/dto/charge-point.req.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { Inject } from '@nestjs/common';
+import { TRANSACTION_MANAGER } from 'src/common/transaction/domain/transaction.interface';
+import { TransactionManager } from 'src/common/transaction/domain/transaction.interface';
 
 @Injectable()
 export class PointFacade {
     constructor(
+        @Inject(TRANSACTION_MANAGER)
+        private readonly transactionManager: TransactionManager,
         private readonly pointService: PointService, 
         private readonly userService: UserService,
         private readonly prisma: PrismaService
     ){}
 
     async chargePoint(body: ChargePointReqDto) {
-        return await this.prisma.$transaction(async (tx) => {
+        return await this.transactionManager.runInTransaction(async (tx) => {
             // 1. 유저 조회
-            const user = await this.userService.getUser(body.userId);
+            const user = await this.userService.getUser(body.userId, tx);
             if(!user) throw new NotFoundException('User not found');
 
             // 2. 소유할 수 있는 최대 Point 검증
@@ -24,13 +29,14 @@ export class PointFacade {
             }
             
             // 3. 포인트 충전
-            const updatedUser = await this.userService.chargePoint(user, body.points);
+            const updatedUser = await this.userService.chargePoint(user, body.points, tx);
 
             // 4. 포인트 충전 내역 저장
             const pointHistory = await this.pointService.savePointHistory(
                 user.id, 
                 body.points, 
-                'charge'
+                'charge',
+                tx
             );
             
             // 5. return

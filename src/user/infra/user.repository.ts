@@ -9,8 +9,9 @@ import { UpdateUserDto } from "../domain/dto/update-user.dto";
 export class UserRepository implements UserRepositoryInterface {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findById(id: number): Promise<User | null> {
-        return await this.prisma.user.findUnique({ where: { id } });
+    async findById(id: number, tx?: any): Promise<User | null> {
+        const prisma = tx || this.prisma;
+        return await prisma.user.findUnique({ where: { id } });
     }
     async findAll(): Promise<User[]> {
         return await this.prisma.user.findMany();
@@ -18,8 +19,9 @@ export class UserRepository implements UserRepositoryInterface {
     async create(createUserDto: CreateUserDto): Promise<User> {
         return await this.prisma.user.create({ data: createUserDto });
     }
-    async update(userId: number, updateUserDto: UpdateUserDto): Promise<User> {
-        return await this.prisma.user.update({
+    async update(userId: number, updateUserDto: UpdateUserDto, tx?: any): Promise<User> {
+        const prisma = tx || this.prisma;
+        return await prisma.user.update({
             where: { id: userId },
             data: {
                 points: updateUserDto.points
