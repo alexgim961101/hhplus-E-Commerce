@@ -6,9 +6,11 @@ import { UserMapper } from "../../interface/mapper/user.mapper";
 
 @Injectable()
 export class UserPrismaRepository implements IUserRepository {
-    constructor(private readonly prisma: PrismaConfig) {}
+  constructor(private readonly prisma: PrismaConfig) {}
 
-    findAll(): Promise<User[]> {
-        return this.prisma.user.findMany().then((users) => users.map(UserMapper.toDomain));
-    }
-}       
+  findAll(): Promise<User[]> {
+    return this.prisma.user
+      .findMany()
+      .then((users) => users.map(UserMapper.toDomain));
+  }
+}

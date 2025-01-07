@@ -1,12 +1,11 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { PrismaModule } from "../prisma/prisma.module";
 import { UserModule } from "./user/user.module";
-
+import { PointModule } from "./point/point.moduel";
 
 @Module({
-  imports: [ConfigModule.forRoot(), PrismaModule, UserModule],
+  imports: [ConfigModule.forRoot(), UserModule, PointModule],
   controllers: [],
   providers: [],
 })
-export class AppModule {} 
+export class AppModule {}

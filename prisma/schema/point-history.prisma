@@ -1,8 +1,14 @@
+enum TransactionType {
+  USE
+  CHARGE
+}
+
 model PointHistory {
     id        Int      @id @default(autoincrement())
     user      User     @relation(fields: [userId], references: [id])
     userId    Int
     points    Int
+    transactionType TransactionType
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
