@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import * as Joi from "joi";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
+import { PointModule } from "./point/point.module";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -13,7 +14,8 @@ import { UserModule } from "./user/user.module";
         }),
     }),
     PrismaModule,
-    UserModule
+    UserModule,
+    PointModule
   ],
   controllers: [],
   providers: [],
