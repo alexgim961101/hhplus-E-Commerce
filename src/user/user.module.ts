@@ -5,6 +5,7 @@ import { USER_REPOSITORY } from "./domain/user.repository.interface";
 import { UserRepository } from "./infra/user.repository";
 
 @Module({
+    exports: [UserService],
     imports: [],
     controllers: [UserController],
     providers: [UserService, { provide: USER_REPOSITORY, useClass: UserRepository }],
