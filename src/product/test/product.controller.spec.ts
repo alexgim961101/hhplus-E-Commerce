@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from "../presentaion/product.controller";
 import { ProductService } from '../domain/service/product.service';
-import { GetProductsQuery } from '../presentaion/dto/get-product.req.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagiantion-query.dto';
 
 describe('ProductController', () => {
     let controller: ProductController;
@@ -27,7 +27,7 @@ describe('ProductController', () => {
     describe('getProducts', () => {
         it('상품 목록이 정상적으로 조회되어야 한다', async () => {
             // Given
-            const query: GetProductsQuery = {
+            const query: PaginationQueryDto = {
                 page: 1,
                 limit: 10
             };
