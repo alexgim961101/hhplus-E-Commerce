@@ -1,4 +1,4 @@
-model Item {
+model Product {
     id        Int      @id @default(autoincrement())
     name      String
     description String
@@ -7,5 +7,5 @@ model Item {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    OrderItems OrderItem[]
+    OrderProducts OrderProduct[]
 }
