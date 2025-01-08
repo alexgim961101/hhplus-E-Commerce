@@ -20,7 +20,7 @@ export class PointFacade {
     async chargePoint(body: ChargePointReqDto) {
         return await this.transactionManager.runInTransaction(async (tx) => {
             // 1. 유저 조회
-            const user = await this.userService.getUser(body.userId, tx);
+            const user = await this.userService.getUserWithLock(body.userId, tx);
             if(!user) throw new NotFoundException('User not found');
 
             // 2. 소유할 수 있는 최대 Point 검증

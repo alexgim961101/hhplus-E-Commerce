@@ -13,6 +13,16 @@ export class UserRepository implements UserRepositoryInterface {
         const prisma = tx || this.prisma;
         return await prisma.user.findUnique({ where: { id } });
     }
+    async findByIdWithLock(id: number, tx?: any): Promise<User | null> {
+        const prisma = tx || this.prisma;
+        const [result] = await prisma.$queryRaw<User>`
+            SELECT id, points, createdAt, updatedAt 
+            FROM \`User\` 
+            WHERE id = ${id} 
+            FOR UPDATE
+        `;
+        return result || null;
+    }
     async findAll(): Promise<User[]> {
         return await this.prisma.user.findMany();
     }
@@ -20,6 +30,7 @@ export class UserRepository implements UserRepositoryInterface {
         return await this.prisma.user.create({ data: createUserDto });
     }
     async update(userId: number, updateUserDto: UpdateUserDto, tx?: any): Promise<User> {
+        console.log(updateUserDto);
         const prisma = tx || this.prisma;
         return await prisma.user.update({
             where: { id: userId },
