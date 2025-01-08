@@ -30,7 +30,6 @@ export class UserRepository implements UserRepositoryInterface {
         return await this.prisma.user.create({ data: createUserDto });
     }
     async update(userId: number, updateUserDto: UpdateUserDto, tx?: any): Promise<User> {
-        console.log(updateUserDto);
         const prisma = tx || this.prisma;
         return await prisma.user.update({
             where: { id: userId },

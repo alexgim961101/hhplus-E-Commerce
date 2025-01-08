@@ -22,13 +22,7 @@ export class UserService {
     }
 
     async chargePoint(user: User, amount: number, tx?: any) { 
-
-        console.log(amount);
-        console.log(typeof amount);
-        console.log(user.points);
         user.points += amount;
-
-        console.log(user.points);
         return await this.userRepository.update(user.id, new UpdateUserDto(user.points), tx);
     }
 }

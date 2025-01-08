@@ -29,7 +29,7 @@ export class PointFacade {
             }
             
             // 3. 포인트 충전
-            const updatedUser = await this.userService.chargePoint(user, body.points, tx);
+            await this.userService.chargePoint(user, body.points, tx);
 
             // 4. 포인트 충전 내역 저장
             const pointHistory = await this.pointService.savePointHistory(
