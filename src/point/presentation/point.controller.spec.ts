@@ -4,7 +4,7 @@ import { PointController } from "./point.controller";
 import { PointService } from "../domain/point.service";
 import { ChargePointReqDto } from "./dto/charge-point.req.dto";
 import { TransactionType } from "@prisma/client";
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
 
 describe('PointController', () => {
     let controller: PointController;
@@ -18,6 +18,7 @@ describe('PointController', () => {
                     provide: PointFacade,
                     useValue: {
                         chargePoint: jest.fn(),
+                        getPoint: jest.fn(),
                     }
                 },
                 {
@@ -107,4 +108,35 @@ describe('PointController', () => {
             expect(pointFacade.chargePoint).toHaveBeenCalledWith(exceedLimitDto);
         });
     })
+
+    describe('getPoint (잔액 조회)', () => {
+        it('사용자의 잔액이 정상적으로 조회되어야 한다', async () => {
+            // Given
+            const userId = '1';
+            const mockPoints = 50000;
+            
+            jest.spyOn(pointFacade, 'getPoint').mockResolvedValue(mockPoints);
+    
+            // When
+            const result = await controller.getPoint(userId);
+    
+            // Then
+            expect(pointFacade.getPoint).toHaveBeenCalledWith(1);
+            expect(result).toBe(mockPoints);
+        });
+    
+        it('존재하지 않는 사용자의 잔액 조회시 404 에러가 발생해야 한다', async () => {
+            // Given
+            const userId = '999';
+            jest.spyOn(pointFacade, 'getPoint').mockRejectedValue(
+                new NotFoundException('User not found')
+            );
+    
+            // When & Then
+            await expect(controller.getPoint(userId))
+                .rejects
+                .toThrow(NotFoundException);
+            expect(pointFacade.getPoint).toHaveBeenCalledWith(999);
+        });
+    });
 })

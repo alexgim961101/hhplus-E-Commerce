@@ -43,4 +43,9 @@ export class PointFacade {
             return pointHistory;
         });
     }
+
+    async getPoint(userId: number) {
+        const user = await this.userService.getUser(userId);
+        return user.points;
+    }
 }

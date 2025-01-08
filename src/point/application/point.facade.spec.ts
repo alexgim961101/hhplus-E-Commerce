@@ -27,7 +27,8 @@ describe('PointFacade', () => {
                     provide: UserService,
                     useValue: {
                         getUserWithLock: jest.fn(),
-                        chargePoint: jest.fn()
+                        chargePoint: jest.fn(),
+                        getUser: jest.fn()
                     }
                 },
                 {
@@ -132,4 +133,26 @@ describe('PointFacade', () => {
                 .toThrow(new BadRequestException('Maximum point limit exceeded'));
         });
     })
+
+    describe('getPoint', () => {
+        it('사용자의 잔액이 정상적으로 조회되어야 한다', async () => {
+            // Given
+            const userId = 1;
+            const mockUser = {
+                id: userId,
+                points: 50000,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
+            
+            jest.spyOn(userService, 'getUser').mockResolvedValue(mockUser);
+    
+            // When
+            const result = await pointFacade.getPoint(userId);
+    
+            // Then
+            expect(userService.getUser).toHaveBeenCalledWith(userId);
+            expect(result).toBe(50000);
+        });
+    });
 })
