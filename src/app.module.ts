@@ -5,6 +5,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
 import { PointModule } from "./point/point.module";
 import { CommonModule } from "./common/common.module";
+import { ProductModule } from "./product/product.module";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -17,7 +18,8 @@ import { CommonModule } from "./common/common.module";
     PrismaModule,
     CommonModule,
     UserModule,
-    PointModule
+    PointModule,
+    ProductModule
   ],
   controllers: [],
   providers: [],
