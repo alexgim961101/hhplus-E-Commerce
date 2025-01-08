@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PointService } from "../domain/point.service";
-import { UserService } from "src/user/domain/user.service";
+import { UserService } from "../../user/domain/user.service";
 import { ChargePointReqDto } from "../presentation/dto/charge-point.req.dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../../prisma/prisma.service";
 import { Inject } from '@nestjs/common';
-import { TRANSACTION_MANAGER } from 'src/common/transaction/domain/transaction.interface';
-import { TransactionManager } from 'src/common/transaction/domain/transaction.interface';
+import { TRANSACTION_MANAGER } from '../../common/transaction/domain/transaction.interface';
+import { TransactionManager } from '../../common/transaction/domain/transaction.interface';
 
 @Injectable()
 export class PointFacade {

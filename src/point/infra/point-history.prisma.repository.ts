@@ -1,4 +1,4 @@
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../../prisma/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { PointHistoryRepositoryInterface } from "../domain/point-history.repository";
 import { PointHistory } from "@prisma/client";
