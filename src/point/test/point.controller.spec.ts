@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PointFacade } from "../application/point.facade";
-import { PointController } from "./point.controller";
+import { PointController } from "../presentation/controller/point.controller";
 import { PointService } from "../domain/point.service";
-import { ChargePointReqDto } from "./dto/charge-point.req.dto";
+import { ChargePointReqDto } from "../presentation/dto/charge-point.req.dto";
 import { TransactionType } from "@prisma/client";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 
@@ -57,10 +57,12 @@ describe('PointController', () => {
 
             // Then
             expect(pointFacade.chargePoint).toHaveBeenCalledWith(chargePointDto);
-            expect(result).toEqual(mockPointHistory);
-            expect(result.points).toBe(10000);
-            expect(result.userId).toBe(1);
-            expect(result.transactionType).toBe(TransactionType.CHARGE);
+            expect(result).toEqual({
+                id: 1,
+                userId: 1,
+                point: 10000,
+                transactionType: TransactionType.CHARGE,
+            });
         });
 
         it('요청 데이터가 누락된 경우 400 에러가 발생해야 한다', async () => {
@@ -112,22 +114,21 @@ describe('PointController', () => {
     describe('getPoint (잔액 조회)', () => {
         it('사용자의 잔액이 정상적으로 조회되어야 한다', async () => {
             // Given
-            const userId = '1';
+            const userId = 1;
             const mockPoints = 50000;
             
             jest.spyOn(pointFacade, 'getPoint').mockResolvedValue(mockPoints);
     
             // When
             const result = await controller.getPoint(userId);
-    
             // Then
             expect(pointFacade.getPoint).toHaveBeenCalledWith(1);
-            expect(result).toBe(mockPoints);
+            expect(result).toEqual({ userId, point: mockPoints });
         });
     
         it('존재하지 않는 사용자의 잔액 조회시 404 에러가 발생해야 한다', async () => {
             // Given
-            const userId = '999';
+            const userId = 999;
             jest.spyOn(pointFacade, 'getPoint').mockRejectedValue(
                 new NotFoundException('User not found')
             );

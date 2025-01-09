@@ -1,18 +1,13 @@
 import { Module } from "@nestjs/common";
-import { TRANSACTION_MANAGER } from "../common/transaction/domain/transaction.interface";
-import { PrismaTransactionManager } from "../common/transaction/infra/prisma-transaction.manager";
-import { ProductController } from "./presentaion/product.controller";
+import { PrismaModule } from "../prisma/prisma.module";
+import { ProductController } from "./presentaion/controller/product.controller";
 import { ProductService } from "./domain/service/product.service";
 import { PRODUCT_REPOSITORY } from "./domain/repopsitory/product.service";
 import { ProductPrismaRepository } from "./infra/repository/product.prisma.repository";
 
 @Module({
-    imports: [],
+    imports: [PrismaModule],
     providers: [
-        {
-            provide: TRANSACTION_MANAGER,
-            useClass: PrismaTransactionManager
-        },
         ProductService,
         {
             provide: PRODUCT_REPOSITORY,

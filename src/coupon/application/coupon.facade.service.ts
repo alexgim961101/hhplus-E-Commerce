@@ -3,12 +3,13 @@ import { CouponService } from "../domain/service/coupon.service";
 import { UserService } from "../../user/domain/user.service";
 import { Coupon, CouponHistory } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
+
 @Injectable()
 export class CouponFacadeService {
     constructor(private readonly couponService: CouponService, private readonly userService: UserService, private readonly prisma: PrismaService) {}
 
     async issueCoupon(userId: number, couponId: number): Promise<{issuedCoupon: Coupon, couponHistory: CouponHistory}> {
-        // 1. user 정보 확인
+        // 1. user 정보 확인 - UserService에서 이미 NotFoundException을 던짐
         await this.userService.getUser(userId);
 
         return await this.prisma.runInTransaction(async (tx) => {

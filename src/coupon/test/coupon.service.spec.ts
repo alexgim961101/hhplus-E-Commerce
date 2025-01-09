@@ -7,19 +7,24 @@ import { Coupon } from '@prisma/client';
 describe('CouponService', () => {
     let service: CouponService;
     let couponHistoryRepository: CouponHistoryRepository;
+    let couponRepository: CouponRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 CouponService,
                 {
-                    provide: CouponRepository,
-                    useValue: {}
-                },
-                {
                     provide: CouponHistoryRepository,
                     useValue: {
-                        findAvailableCouponByUserId: jest.fn()
+                        findAvailableCouponByUserId: jest.fn(),
+                        save: jest.fn()
+                    }
+                },
+                {
+                    provide: CouponRepository,
+                    useValue: {
+                        findById: jest.fn(),
+                        save: jest.fn()
                     }
                 }
             ]
@@ -27,6 +32,7 @@ describe('CouponService', () => {
 
         service = module.get<CouponService>(CouponService);
         couponHistoryRepository = module.get<CouponHistoryRepository>(CouponHistoryRepository);
+        couponRepository = module.get<CouponRepository>(CouponRepository);
     });
 
     describe('getCouponList', () => {

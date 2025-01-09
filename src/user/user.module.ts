@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { UserController } from "./presentation/user.controller";
+import { UserController } from "./presentation/controller/user.controller";
 import { UserService } from "./domain/user.service";
 import { USER_REPOSITORY } from "./domain/user.repository.interface";
 import { UserRepository } from "./infra/user.repository";

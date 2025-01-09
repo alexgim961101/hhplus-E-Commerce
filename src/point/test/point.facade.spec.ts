@@ -1,20 +1,21 @@
-import { TRANSACTION_MANAGER, TransactionManager } from "../../common/transaction/domain/transaction.interface";
 import { UserService } from "../../user/domain/user.service";
 import { PointService } from "../domain/point.service";
-import { PointFacade } from "./point.facade";
+import { PointFacade } from "../application/point.facade";
 import { PrismaService } from "../../prisma/prisma.service";
 import { Test, TestingModule } from "@nestjs/testing";
 import { TransactionType, User } from "@prisma/client";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { PrismaModule } from "../../prisma/prisma.module";
 
 describe('PointFacade', () => {
     let pointFacade: PointFacade;
     let pointService: PointService;
     let userService: UserService;
-    let transactionManager: TransactionManager;
+    let prismaService: PrismaService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [PrismaModule],
             providers: [
                 PointFacade,
                 {
@@ -33,12 +34,8 @@ describe('PointFacade', () => {
                 },
                 {
                     provide: PrismaService,
-                    useValue: {}
-                },
-                {
-                    provide: TRANSACTION_MANAGER,
                     useValue: {
-                        runInTransaction: jest.fn((callback) => callback('tx'))
+                        runInTransaction: jest.fn((callback) => callback())
                     }
                 }
             ]
@@ -47,7 +44,7 @@ describe('PointFacade', () => {
         pointFacade = module.get<PointFacade>(PointFacade);
         pointService = module.get<PointService>(PointService);
         userService = module.get<UserService>(UserService);
-        transactionManager = module.get(TRANSACTION_MANAGER);
+        prismaService = module.get<PrismaService>(PrismaService);
     });
 
     describe('chargePoint', () => {
@@ -82,13 +79,13 @@ describe('PointFacade', () => {
             const result = await pointFacade.chargePoint(chargePointDto);
 
             // Then
-            expect(userService.getUserWithLock).toHaveBeenCalledWith(chargePointDto.userId, 'tx');
-            expect(userService.chargePoint).toHaveBeenCalledWith(mockUser, chargePointDto.points, 'tx');
+            expect(userService.getUserWithLock).toHaveBeenCalledWith(chargePointDto.userId, undefined);
+            expect(userService.chargePoint).toHaveBeenCalledWith(mockUser, chargePointDto.points, undefined);
             expect(pointService.savePointHistory).toHaveBeenCalledWith(
                 chargePointDto.userId,
                 chargePointDto.points,
                 'charge',
-                'tx'
+                undefined
             );
             expect(result).toEqual(mockPointHistory);
         });

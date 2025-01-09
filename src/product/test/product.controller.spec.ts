@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductController } from "../presentaion/product.controller";
+import { ProductController } from "../presentaion/controller/product.controller";
 import { ProductService } from '../domain/service/product.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 

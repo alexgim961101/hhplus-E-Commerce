@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CouponFacadeService } from '../application/coupon.facade.service';
 import { CouponService } from '../domain/service/coupon.service';
 import { UserService } from '../../user/domain/user.service';
-import { PrismaService } from '../../prisma/prisma.service';
 import { NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 describe('CouponFacadeService', () => {
     let facadeService: CouponFacadeService;
@@ -26,13 +26,14 @@ describe('CouponFacadeService', () => {
                 {
                     provide: UserService,
                     useValue: {
-                        getUser: jest.fn()
+                        getUser: jest.fn(),
+                        getUserWithLock: jest.fn()
                     }
                 },
                 {
                     provide: PrismaService,
                     useValue: {
-                        runInTransaction: jest.fn()
+                        runInTransaction: jest.fn((callback) => callback())
                     }
                 }
             ]
@@ -89,8 +90,6 @@ describe('CouponFacadeService', () => {
             jest.spyOn(couponService, 'getCoupon').mockResolvedValue(mockCoupon);
             jest.spyOn(couponService, 'issueCoupon').mockResolvedValue(mockIssuedCoupon);
             jest.spyOn(couponService, 'saveCouponHistory').mockResolvedValue(mockCouponHistory);
-            jest.spyOn(prismaService, 'runInTransaction').mockImplementation(callback => callback(prismaService));
-
             // When
             const result = await facadeService.issueCoupon(userId, couponId);
 
@@ -106,7 +105,7 @@ describe('CouponFacadeService', () => {
             const userId = 999;
             const couponId = 1;
 
-            jest.spyOn(userService, 'getUser').mockResolvedValue(null);
+            jest.spyOn(userService, 'getUser').mockRejectedValue(new NotFoundException('User not found'));
 
             // When & Then
             await expect(facadeService.issueCoupon(userId, couponId))
@@ -142,8 +141,6 @@ describe('CouponFacadeService', () => {
 
             jest.spyOn(userService, 'getUser').mockResolvedValue(mockUser);
             jest.spyOn(couponService, 'getCoupon').mockResolvedValue(mockCoupon);
-            jest.spyOn(prismaService, 'runInTransaction').mockImplementation(callback => callback(prismaService));
-
             // When
             const result = await facadeService.issueCoupon(userId, couponId);
 

@@ -3,10 +3,12 @@ import { CouponController } from '../presentation/controller/coupon.controller';
 import { CouponService } from '../domain/service/coupon.service';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { DiscountType } from '@prisma/client';
+import { CouponFacadeService } from '../application/coupon.facade.service';
 
 describe('CouponController', () => {
     let controller: CouponController;
     let couponService: CouponService;
+    let couponFacadeService: CouponFacadeService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -17,12 +19,19 @@ describe('CouponController', () => {
                     useValue: {
                         getCouponList: jest.fn()
                     }
+                },
+                {
+                    provide: CouponFacadeService,
+                    useValue: {
+                        issueCoupon: jest.fn()
+                    }
                 }
             ]
         }).compile();
 
         controller = module.get<CouponController>(CouponController);
         couponService = module.get<CouponService>(CouponService);
+        couponFacadeService = module.get<CouponFacadeService>(CouponFacadeService);
     });
 
     describe('getCouponList', () => {

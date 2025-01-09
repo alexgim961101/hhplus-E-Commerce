@@ -4,7 +4,6 @@ import * as Joi from "joi";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
 import { PointModule } from "./point/point.module";
-import { CommonModule } from "./common/common.module";
 import { ProductModule } from "./product/product.module";
 import { CouponModule } from "./coupon/coupon.module";
 
@@ -17,7 +16,6 @@ import { CouponModule } from "./coupon/coupon.module";
         }),
     }),
     PrismaModule,
-    CommonModule,
     UserModule,
     PointModule,
     ProductModule,
