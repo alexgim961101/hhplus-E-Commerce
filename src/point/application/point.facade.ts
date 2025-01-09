@@ -4,21 +4,17 @@ import { UserService } from "../../user/domain/user.service";
 import { ChargePointReqDto } from "../presentation/dto/charge-point.req.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { Inject } from '@nestjs/common';
-import { TRANSACTION_MANAGER } from '../../common/transaction/domain/transaction.interface';
-import { TransactionManager } from '../../common/transaction/domain/transaction.interface';
 
 @Injectable()
 export class PointFacade {
     constructor(
-        @Inject(TRANSACTION_MANAGER)
-        private readonly transactionManager: TransactionManager,
         private readonly pointService: PointService, 
         private readonly userService: UserService,
         private readonly prisma: PrismaService
     ){}
 
     async chargePoint(body: ChargePointReqDto) {
-        return await this.transactionManager.runInTransaction(async (tx) => {
+        return await this.prisma.runInTransaction(async (tx) => {
             // 1. 유저 조회
             const user = await this.userService.getUserWithLock(body.userId, tx);
             if(!user) throw new NotFoundException('User not found');

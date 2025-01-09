@@ -1,7 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CouponRepository } from "../repository/coupon.repository";
 import { CouponHistoryRepository } from "../repository/coupon-history.repository";
 import { PaginationCouponRespDto } from "src/coupon/presentation/dto/pagination-coupon.resp.dto";
+import { Coupon, CouponHistory } from "@prisma/client";
 
 @Injectable()
 export class CouponService {
@@ -22,4 +23,19 @@ export class CouponService {
         }
     }
 
+    async getCoupon(couponId: number, tx?: any): Promise<Coupon> {
+        const coupon = await this.couponRepository.findCouponByIdWithLock(couponId, tx);
+        if (!coupon) {
+            throw new NotFoundException("Coupon not found");
+        }
+        return coupon;
+    }
+
+    async issueCoupon(couponId: number, tx?: any): Promise<Coupon> {
+        return await this.couponRepository.issueCoupon(couponId, tx);
+    }
+
+    async saveCouponHistory(couponId: number, userId: number, tx?: any): Promise<CouponHistory> {
+        return await this.couponHistoryRepository.saveCouponHistory(couponId, userId, tx);
+    }
 }

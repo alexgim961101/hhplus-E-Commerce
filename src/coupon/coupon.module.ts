@@ -5,8 +5,15 @@ import { CouponPrismaRepository } from "./infra/coupon.prisma.repository";
 import { CouponHistoryRepository } from "./domain/repository/coupon-history.repository";
 import { CouponHistoryPrismaRepository } from "./infra/coupon-history.prisma.repository";
 import { CouponService } from "./domain/service/coupon.service";
+import { UserModule } from "../user/user.module";
+import { CouponFacadeService } from "./application/coupon.facade.service";
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
+    imports: [
+        PrismaModule,
+        UserModule
+    ],
     providers: [
         {
             provide: CouponRepository,
@@ -16,8 +23,10 @@ import { CouponService } from "./domain/service/coupon.service";
             provide: CouponHistoryRepository,
             useClass: CouponHistoryPrismaRepository
         },
-        CouponService 
+        CouponService,
+        CouponFacadeService,
     ],
     controllers: [CouponController],
+    exports: [CouponService, CouponFacadeService]
 })
 export class CouponModule {}

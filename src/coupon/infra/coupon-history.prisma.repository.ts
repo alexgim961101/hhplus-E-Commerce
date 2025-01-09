@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { CouponHistoryRepository } from "../domain/repository/coupon-history.repository";
 import { PrismaService } from "../../prisma/prisma.service";
-import { Coupon } from "@prisma/client";
+import { Coupon, CouponHistory } from "@prisma/client";
 
 @Injectable()
 export class CouponHistoryPrismaRepository implements CouponHistoryRepository {
@@ -33,5 +33,16 @@ export class CouponHistoryPrismaRepository implements CouponHistoryRepository {
             coupons: result,
             total: Number(total[0].count)
         }
+    }
+
+    async saveCouponHistory(couponId: number, userId: number, tx?: any): Promise<CouponHistory> {
+        const prisma = tx || this.prisma;
+        return await prisma.couponHistory.create({
+            data: {
+                userId,
+                couponId,
+                isUsed: false
+            }
+        });
     }
 }
