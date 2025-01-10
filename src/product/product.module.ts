@@ -14,6 +14,7 @@ import { ProductPrismaRepository } from "./infra/repository/product.prisma.repos
             useClass: ProductPrismaRepository
         }
     ],
-    controllers: [ProductController]
+    controllers: [ProductController],
+    exports: [ProductService]
 })
 export class ProductModule {}

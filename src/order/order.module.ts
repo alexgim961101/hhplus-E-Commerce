@@ -6,19 +6,19 @@ import { OrderService } from "./domain/service/order.service";
 import { OrderFacadeService } from "./application/facade/order.facade.service";
 import { ProductModule } from "../product/product.module";
 import { CouponService } from "../coupon/domain/service/coupon.service";
+import { CouponModule } from "../coupon/coupon.module";
 
 @Module({
-  imports: [ProductModule],
+  imports: [ProductModule, CouponModule],
   providers: [
     OrderService,
     OrderFacadeService,
-    CouponService,
     {
       provide: ORDER_REPOSITORY,
       useClass: OrderPrismaRepository,
     },
   ],
   controllers: [OrderController],
-  exports: [],
+  exports: [OrderFacadeService, OrderService],
 })
 export class OrderModule {}
