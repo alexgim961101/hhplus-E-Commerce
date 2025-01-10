@@ -6,6 +6,7 @@ import { UserModule } from "./user/user.module";
 import { PointModule } from "./point/point.module";
 import { ProductModule } from "./product/product.module";
 import { CouponModule } from "./coupon/coupon.module";
+import { OrderModule } from "./order/order.module";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -19,7 +20,8 @@ import { CouponModule } from "./coupon/coupon.module";
     UserModule,
     PointModule,
     ProductModule,
-    CouponModule
+    CouponModule,
+    OrderModule
   ],
   controllers: [],
   providers: [],

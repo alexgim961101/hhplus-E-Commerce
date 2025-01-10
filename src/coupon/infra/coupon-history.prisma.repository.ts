@@ -45,4 +45,26 @@ export class CouponHistoryPrismaRepository implements CouponHistoryRepository {
             }
         });
     }
+
+    async findCouponHistoryByCouponIdAndUserId(couponId: number, userId: number, tx: any): Promise<CouponHistory> {
+        const prisma = tx || this.prisma;
+        return await prisma.couponHistory.findFirst({
+            where: {
+                couponId,
+                userId
+            }
+        });
+    }
+
+    async useCoupon(id: number, tx: any): Promise<CouponHistory> {
+        const prisma = tx || this.prisma;
+        return await prisma.couponHistory.update({
+            where: {
+                id
+            },
+            data: {
+                isUsed: true
+            }
+        });
+    }
 }
