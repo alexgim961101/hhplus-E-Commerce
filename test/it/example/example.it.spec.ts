@@ -1,11 +1,11 @@
-import { DatabaseModule } from "../../../src/database/database.module";
 import { Logger } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
+import { PrismaModule } from "../../../src/prisma/prisma.module";
 
 describe("Should return expected result", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [DatabaseModule],
+      imports: [PrismaModule],
     }).compile();
     moduleRef.useLogger(new Logger());
   });

@@ -1,10 +1,13 @@
 import { User } from "@prisma/client";
+import { CreateUserDto } from "../presentation/dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 export interface UserRepositoryInterface {
-    findById(id: number): Promise<User | null>;
+    findById(id: number, tx?: any): Promise<User | null>;
+    findByIdWithLock(id: number, tx?: any): Promise<User | null>;
     findAll(): Promise<User[]>;
-    create(user: User): Promise<User>;
-    update(user: User): Promise<User>;
+    create(createUserDto: CreateUserDto): Promise<User>;
+    update(userId: number, updateUserDto: UpdateUserDto, tx?: any): Promise<User>;
     delete(id: number): Promise<void>;
 }
 
