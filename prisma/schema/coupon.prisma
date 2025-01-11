@@ -15,7 +15,4 @@ model Coupon {
     currentCount Int
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    orders Order[]
-    couponHistories CouponHistory[]
 }

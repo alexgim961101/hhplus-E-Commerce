@@ -7,11 +7,9 @@ enum OrderStatus {
     RETURNED
 }
 
-model Order {
+model Orders {
     id        Int      @id @default(autoincrement())
-    user      User     @relation(fields: [userId], references: [id])
     userId    Int
-    coupon    Coupon   @relation(fields: [couponId], references: [id])
     couponId  Int
     orderSubtotal Int
     discount Int
@@ -19,7 +17,4 @@ model Order {
     orderStatus OrderStatus
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    orderProducts OrderProduct[]
-    payments Payment[]
 }

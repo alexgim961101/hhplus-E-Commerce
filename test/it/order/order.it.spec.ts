@@ -5,6 +5,8 @@ import { OrderModule } from '@/order/order.module';
 import { CouponModule } from '@/coupon/coupon.module';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { ProductModule } from '@/product/product.module';
+import * as fs from 'fs';
+import * as path from 'path';
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;
@@ -21,54 +23,32 @@ describe('상품 주문 통합 테스트', () => {
   });
 
   beforeEach(async () => {
-    // 테스트 데이터 초기화
-    await prisma.order.deleteMany();
-    await prisma.product.deleteMany();
-    await prisma.user.deleteMany();
-    await prisma.coupon.deleteMany();
+    // 테이블 생성 SQL 실행
+    const createTableSQL = fs.readFileSync(
+        path.join(__dirname, '../../it/create-table.sql'),
+        'utf8'
+    );
+    for (const sql of createTableSQL.split(";").filter((s) => s.trim() !== "")) {
+        await prisma.$executeRawUnsafe(sql);
+    }
 
-    // 테스트용 상품 데이터 생성
-    await prisma.product.create({
-      data: {
-        id: 1,
-        name: '테스트 상품',
-        price: 10000,
-        stock: 10,
-        description: '테스트 상품입니다.'
-      }
-    });
-
-    // 테스트용 사용자 생성
-    await prisma.user.create({
-      data: {
-        id: 1,
-        points: 1000000
-      }
-    });
-
-    // 테스트용 쿠폰 생성
-    await prisma.coupon.create({
-      data: {
-        id: 1,
-        title: '10% 할인 쿠폰',
-        description: '모든 상품 10% 할인',
-        discountType: 'PERCENTAGE',
-        discountAmount: 10,
-        maxCount: 100,
-        currentCount: 0,
-        validFrom: new Date(),
-        validTo: new Date('2024-12-31')
-      }
-    });
+    // 초기 데이터 삽입 SQL 실행
+    const importSQL = fs.readFileSync(
+        path.join(__dirname, '../../it/import.sql'),
+        'utf8'
+    );
+    for (const sql of importSQL.split(";").filter((s) => s.trim() !== "")) {
+        await prisma.$executeRawUnsafe(sql);
+    }
   });
 
   afterEach(async () => {
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "OrderDetail"');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "Order"');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "CouponHistory"');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "Coupon"');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "Product"');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "User"');
+    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS OrderDetail');
+    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Orders');
+    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS CouponHistory');
+    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Coupon');
+    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Product');
+    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS User');
   });
 
   describe('동시성 테스트', () => {

@@ -1,7 +1,5 @@
 model PointPaymentLink {
     id        Int      @id @default(autoincrement())
-    pointHistory PointHistory @relation(fields: [pointHistoryId], references: [id])
     pointHistoryId Int
-    payment Payment @relation(fields: [paymentId], references: [id])
     paymentId Int
 }

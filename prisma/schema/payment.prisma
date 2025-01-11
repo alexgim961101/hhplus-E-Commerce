@@ -11,13 +11,10 @@ enum PaymentStatus {
 
 model Payment {
     id        Int      @id @default(autoincrement())
-    order     Order    @relation(fields: [orderId], references: [id])
     orderId   Int
     paymentMethod PaymentMethod
     amount    Int
     paymentStatus PaymentStatus
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    pointPaymentLinks PointPaymentLink[]
 }
