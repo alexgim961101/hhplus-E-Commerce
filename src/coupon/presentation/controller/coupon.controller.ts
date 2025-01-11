@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseIntPipe, Post, Query } from "@nestjs/common"; 
-import { PaginationCouponRespDto } from "../dto/pagination-coupon.resp.dto";
-import { PaginationQueryDto } from "../../../common/dto/pagination-query.dto";
-import { CouponService } from "../../domain/service/coupon.service";
-import { CouponFacadeService } from "../../application/coupon.facade.service";
-import { IssueCouponRespDto } from "../dto/issue-coupon.resp.dto";
+import { PaginationCouponRespDto } from "@/coupon/presentation/dto/pagination-coupon.resp.dto";
+import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
+import { CouponService } from "@/coupon/domain/service/coupon.service";
+import { CouponFacadeService } from "@/coupon/application/coupon.facade.service";
+import { IssueCouponRespDto } from "@/coupon/presentation/dto/issue-coupon.resp.dto";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('Coupon')

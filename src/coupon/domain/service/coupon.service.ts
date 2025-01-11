@@ -1,9 +1,9 @@
 import { Inject, Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
-import { CouponRepository } from "../repository/coupon.repository";
-import { CouponHistoryRepository } from "../repository/coupon-history.repository";
-import { PaginationCouponRespDto } from "src/coupon/presentation/dto/pagination-coupon.resp.dto";
+import { CouponRepository } from "@/coupon/domain/repository/coupon.repository";
+import { CouponHistoryRepository } from "@/coupon/domain/repository/coupon-history.repository";
+import { PaginationCouponRespDto } from "@/coupon/presentation/dto/pagination-coupon.resp.dto";
 import { Coupon, CouponHistory, DiscountType } from "@prisma/client";
-import { ProcessCouponDiscountDto } from "../dto/process-coupon-discount.dto";
+import { ProcessCouponDiscountDto } from "@/coupon/domain/dto/process-coupon-discount.dto";
 
 @Injectable()
 export class CouponService {

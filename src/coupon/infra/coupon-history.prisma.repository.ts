@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CouponHistoryRepository } from "../domain/repository/coupon-history.repository";
-import { PrismaService } from "../../prisma/prisma.service";
+import { CouponHistoryRepository } from "@/coupon/domain/repository/coupon-history.repository";
+import { PrismaService } from "@/prisma/prisma.service";
 import { Coupon, CouponHistory } from "@prisma/client";
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Inject, Injectable, BadRequestException } from "@nestjs/common";
-import { PRODUCT_REPOSITORY, ProductRepository } from "../repopsitory/product.service";
 import { Product } from "@prisma/client";
+import { PRODUCT_REPOSITORY, ProductRepository } from "../repository/product.repository";
 
 @Injectable()
 export class ProductService {

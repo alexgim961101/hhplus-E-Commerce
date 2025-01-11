@@ -1,11 +1,11 @@
-import { UserService } from "../../user/domain/user.service";
-import { PointService } from "../domain/point.service";
-import { PointFacade } from "../application/point.facade";
-import { PrismaService } from "../../prisma/prisma.service";
+import { UserService } from "@/user/domain/user.service";
+import { PointService } from "@/point/domain/point.service";
+import { PointFacade } from "@/point/application/point.facade";
+import { PrismaService } from "@/prisma/prisma.service";
 import { Test, TestingModule } from "@nestjs/testing";
 import { TransactionType, User } from "@prisma/client";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
-import { PrismaModule } from "../../prisma/prisma.module";
+import { PrismaModule } from "@/prisma/prisma.module";
 
 describe('PointFacade', () => {
     let pointFacade: PointFacade;

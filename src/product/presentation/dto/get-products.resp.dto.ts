@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Product } from '@prisma/client';
-import { ProductDto } from './product.dto';
+import { ProductDto } from '@/product/presentation/dto/product.dto';
 
 export class GetProductsResponse {
     @ApiProperty({ 

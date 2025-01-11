@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrderFacadeService } from '../../../src/order/application/facade/order.facade.service';
-import { PrismaService } from '../../../src/prisma/prisma.service';
-import { OrderModule } from '../../../src/order/order.module';
-import { CouponModule } from '../../../src/coupon/coupon.module';
-import { PrismaModule } from '../../../src/prisma/prisma.module';
-import { ProductModule } from '../../../src/product/product.module';
+import { OrderFacadeService } from '@/order/application/facade/order.facade.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { OrderModule } from '@/order/order.module';
+import { CouponModule } from '@/coupon/coupon.module';
+import { PrismaModule } from '@/prisma/prisma.module';
+import { ProductModule } from '@/product/product.module';
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductService } from '../domain/service/product.service';
-import { PRODUCT_REPOSITORY, ProductRepository } from '../domain/repopsitory/product.service';
-import { Product } from '@prisma/client';
+import { ProductService } from "@/product/domain/service/product.service";
+import { PRODUCT_REPOSITORY, ProductRepository } from "@/product/domain/repository/product.repository";
+import { Product } from "@prisma/client";
 
 describe('ProductService', () => {
     let service: ProductService;

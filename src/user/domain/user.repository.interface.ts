@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
-import { CreateUserDto } from "../presentation/dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
+import { CreateUserDto } from "@/user/domain/dto/create-user.dto";
+import { UpdateUserDto } from "@/user/domain/dto/update-user.dto";
 
 export interface UserRepositoryInterface {
     findById(id: number, tx?: any): Promise<User | null>;

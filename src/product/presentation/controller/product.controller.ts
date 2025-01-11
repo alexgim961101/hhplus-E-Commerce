@@ -2,7 +2,7 @@ import { Controller, Get, Query } from "@nestjs/common";
 import { ProductService } from "@/product/domain/service/product.service";
 import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
 import { ApiResponse, ApiOperation } from "@nestjs/swagger";
-import { GetProductsResponse } from "../dto/get-products.resp.dto";
+import { GetProductsResponse } from "@/product/presentation/dto/get-products.resp.dto";
 
 @Controller('product')
 export class ProductController {

@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
-import { PointService } from "@/point/domain/point.service";
 import { ChargePointReqDto } from "@/point/presentation/dto/charge-point.req.dto";
 import { PointFacade } from "@/point/application/point.facade";
 import { ChargePointResponseDto } from "@/point/presentation/dto/charge-point.resp.dto";

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CouponService } from '../domain/service/coupon.service';
-import { CouponRepository } from '../domain/repository/coupon.repository';
-import { CouponHistoryRepository } from '../domain/repository/coupon-history.repository';
+import { CouponService } from '@/coupon/domain/service/coupon.service';
+import { CouponRepository } from '@/coupon/domain/repository/coupon.repository';
+import { CouponHistoryRepository } from '@/coupon/domain/repository/coupon-history.repository';
 import { Coupon } from '@prisma/client';
 
 describe('CouponService', () => {

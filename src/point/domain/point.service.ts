@@ -1,6 +1,6 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { PointHistoryRepositoryInterface } from "./point-history.repository";
-import { POINT_HISTORY_REPOSITORY } from "./point-history.repository";
+import { Inject, Injectable } from "@nestjs/common";
+import { PointHistoryRepositoryInterface } from "@/point/domain/point-history.repository";
+import { POINT_HISTORY_REPOSITORY } from "@/point/domain/point-history.repository";
 import { TransactionType } from "@prisma/client";
 
 @Injectable()

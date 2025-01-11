@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { UserService } from "../../domain/user.service";
-import { CreateUserDto } from "../dto/create-user.dto";
-import { GetUserRespDto } from "../dto/getUser-resp.dto";
-import { CreateUserRespDto } from "../dto/createUser-resp.dto";
+import { UserService } from "@/user/domain/user.service";
+import { CreateUserDto } from "@/user/presentation/dto/create-user.dto";
+import { GetUserRespDto } from "@/user/presentation/dto/getUser-resp.dto";
+import { CreateUserRespDto } from "@/user/presentation/dto/createUser-resp.dto";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('User')

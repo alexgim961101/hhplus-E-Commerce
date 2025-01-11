@@ -1,8 +1,8 @@
-import { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from "@/prisma/prisma.service";
 import { Injectable } from "@nestjs/common";
-import { PointHistoryRepositoryInterface } from "../domain/point-history.repository";
+import { PointHistoryRepositoryInterface } from "@/point/domain/point-history.repository";
 import { PointHistory } from "@prisma/client";
-import { CreatePointHistoryDto } from "../domain/dto/create-point-history.dto";
+import { CreatePointHistoryDto } from "@/point/domain/dto/create-point-history.dto";
 
 @Injectable()
 export class PointHistoryPrismaRepository implements PointHistoryRepositoryInterface {

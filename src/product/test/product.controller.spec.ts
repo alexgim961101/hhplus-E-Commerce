@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductController } from "../presentaion/controller/product.controller";
-import { ProductService } from '../domain/service/product.service';
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { ProductController } from "@/product/presentation/controller/product.controller";
+import { ProductService } from "@/product/domain/service/product.service";
+import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
 
 describe('ProductController', () => {
     let controller: ProductController;

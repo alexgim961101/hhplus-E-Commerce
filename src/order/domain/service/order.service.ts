@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { IOrderRepository, ORDER_REPOSITORY } from "../repository/order.repository";
-import { Order, OrderStatus } from "@prisma/client";
-import { CreateOrderWithDetailsDto, OrderCreateDto } from "../dto/order-create.dto";
+import { IOrderRepository, ORDER_REPOSITORY } from "@/order/domain/repository/order.repository";
+import { OrderStatus } from "@prisma/client";
+import { CreateOrderWithDetailsDto, OrderCreateDto } from "@/order/domain/dto/order-create.dto";
 
 @Injectable()
 export class OrderService {

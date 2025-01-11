@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrderFacadeService } from '../application/facade/order.facade.service';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { OrderController } from '../presentation/controller/order.controller';
-import { OrderProductReqDto } from '../presentation/dto/order-product.req.dto';
+import { OrderFacadeService } from '@/order/application/facade/order.facade.service';
+import { BadRequestException } from '@nestjs/common';
+import { OrderController } from '@/order/presentation/controller/order.controller';
+import { OrderProductReqDto } from '@/order/presentation/dto/order-product.req.dto';
 
 describe('OrderController', () => {
   let controller: OrderController;

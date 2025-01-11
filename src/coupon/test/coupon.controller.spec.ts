@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CouponController } from '../presentation/controller/coupon.controller';
-import { CouponService } from '../domain/service/coupon.service';
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { CouponController } from '@/coupon/presentation/controller/coupon.controller';
+import { CouponService } from '@/coupon/domain/service/coupon.service';
+import { PaginationQueryDto } from '@/common/dto/pagination-query.dto';
 import { DiscountType } from '@prisma/client';
-import { CouponFacadeService } from '../application/coupon.facade.service';
+import { CouponFacadeService } from '@/coupon/application/coupon.facade.service';
 
 describe('CouponController', () => {
     let controller: CouponController;

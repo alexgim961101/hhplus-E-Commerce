@@ -1,5 +1,5 @@
 import { PointHistory } from "@prisma/client";
-import { CreatePointHistoryDto } from "./dto/create-point-history.dto";
+import { CreatePointHistoryDto } from "@/point/domain/dto/create-point-history.dto";
 
 export interface PointHistoryRepositoryInterface {
     create(createPointHistoryDto: CreatePointHistoryDto, tx?: any): Promise<PointHistory>;

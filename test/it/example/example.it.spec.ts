@@ -1,6 +1,6 @@
 import { Logger } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { PrismaModule } from "../../../src/prisma/prisma.module";
+import { PrismaModule } from "@/prisma/prisma.module";
 
 describe("Should return expected result", () => {
   beforeAll(async () => {
