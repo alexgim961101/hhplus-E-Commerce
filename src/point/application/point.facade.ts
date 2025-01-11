@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { PointService } from "../domain/point.service";
-import { UserService } from "../../user/domain/user.service";
-import { ChargePointReqDto } from "../presentation/dto/charge-point.req.dto";
-import { PrismaService } from "../../prisma/prisma.service";
+import { PointService } from "@/point/domain/point.service";
+import { UserService } from "@/user/domain/user.service";
+import { ChargePointReqDto } from "@/point/presentation/dto/charge-point.req.dto";
+import { PrismaService } from "@/prisma/prisma.service";
 import { Inject } from '@nestjs/common';
 
 @Injectable()

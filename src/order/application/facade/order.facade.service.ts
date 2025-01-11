@@ -1,11 +1,10 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { OrderService } from "../../domain/service/order.service";
-import { OrderProductReqDto } from "../../presentation/dto/order-product.req.dto";
-import { OrderProductItemRespDto, OrderProductRespDto } from "../../presentation/dto/order-product.resp.dto";
-import { ProductService } from "../../../../src/product/domain/service/product.service";
-import { CouponService } from "../../../../src/coupon/domain/service/coupon.service";
-import { DiscountType, OrderStatus, Product } from "@prisma/client";
-import { PrismaService } from "../../../../src/prisma/prisma.service";
+import { Injectable } from "@nestjs/common";
+import { OrderService } from "@/order/domain/service/order.service";
+import { OrderProductReqDto } from "@/order/presentation/dto/order-product.req.dto";
+import { OrderProductRespDto } from "@/order/presentation/dto/order-product.resp.dto";
+import { ProductService } from "@/product/domain/service/product.service";
+import { CouponService } from "@/coupon/domain/service/coupon.service";
+import { PrismaService } from "@/prisma/prisma.service";
 
 @Injectable()
 export class OrderFacadeService {

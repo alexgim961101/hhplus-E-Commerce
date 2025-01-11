@@ -1,9 +1,8 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { ProductService } from "../../domain/service/product.service";
+import { ProductService } from "@/product/domain/service/product.service";
+import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
+import { ApiResponse, ApiOperation } from "@nestjs/swagger";
 import { GetProductsResponse } from "../dto/get-products.resp.dto";
-import { PaginationQueryDto } from "../../../common/dto/pagination-query.dto";
-import { ApiResponse } from "@nestjs/swagger";
-import { ApiOperation } from "@nestjs/swagger";
 
 @Controller('product')
 export class ProductController {

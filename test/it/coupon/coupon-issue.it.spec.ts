@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CouponFacadeService } from '../../../src/coupon/application/coupon.facade.service';
-import { PrismaService } from '../../../src/prisma/prisma.service';
-import { CouponModule } from '../../../src/coupon/coupon.module';
-import { UserModule } from '../../../src/user/user.module';
-import { PrismaModule } from '../../../src/prisma/prisma.module';
+import { CouponFacadeService } from '@/coupon/application/coupon.facade.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { CouponModule } from '@/coupon/coupon.module';
+import { UserModule } from '@/user/user.module';
+import { PrismaModule } from '@/prisma/prisma.module';
 import { Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { PointFacade } from "../application/point.facade";
-import { PointController } from "../presentation/controller/point.controller";
-import { PointService } from "../domain/point.service";
-import { ChargePointReqDto } from "../presentation/dto/charge-point.req.dto";
+import { PointFacade } from "@/point/application/point.facade";
+import { PointController } from "@/point/presentation/controller/point.controller";
+import { PointService } from "@/point/domain/point.service";
+import { ChargePointReqDto } from "@/point/presentation/dto/charge-point.req.dto";
 import { TransactionType } from "@prisma/client";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 
