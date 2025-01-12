@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from "@/product/domain/service/product.service";
 import { PRODUCT_REPOSITORY, ProductRepository } from "@/product/domain/repository/product.repository";
-import { Product } from "@prisma/client";
+import { ProductModel } from '@/product/domain/model/product';
 
 describe('ProductService', () => {
     let service: ProductService;
@@ -32,8 +32,8 @@ describe('ProductService', () => {
             const limit = 10;
             const totalCount = 2;
 
-            const mockProducts: Product[] = [
-                {
+            const mockProducts: ProductModel[] = [
+                new ProductModel({
                     id: 1,
                     name: 'Product 1',
                     price: 10000,
@@ -41,8 +41,8 @@ describe('ProductService', () => {
                     description: 'Product 1 description',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },
-                {
+                }),
+                new ProductModel({
                     id: 2,
                     name: 'Product 2',
                     price: 20000,
@@ -50,7 +50,7 @@ describe('ProductService', () => {
                     description: 'Product 2 description',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }
+                })
             ];
 
             jest.spyOn(repository, 'findAll').mockResolvedValue(mockProducts);
@@ -73,8 +73,8 @@ describe('ProductService', () => {
             const limit = 10;
             const totalCount = 21; // 총 21개의 상품이 있을 때 3페이지가 나와야 함
 
-            const mockProducts: Product[] = [
-                {
+            const mockProducts: ProductModel[] = [
+                new ProductModel({
                     id: 1,
                     name: 'Product 1',
                     price: 10000,
@@ -82,8 +82,8 @@ describe('ProductService', () => {
                     description: 'Product 1 description',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },
-                {
+                }),
+                new ProductModel({
                     id: 2,
                     name: 'Product 2',
                     price: 20000,
@@ -91,7 +91,7 @@ describe('ProductService', () => {
                     description: 'Product 2 description',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }
+                })
             ];
 
             jest.spyOn(repository, 'findAll').mockResolvedValue(mockProducts);
@@ -106,8 +106,8 @@ describe('ProductService', () => {
         
         it('마지막 페이지의 상품 목록이 정상적으로 조회되어야 한다', async () => {
             // Given
-            const mockProducts: Product[] = [
-                {
+            const mockProducts: ProductModel[] = [
+                new ProductModel({
                     id: 1,
                     name: 'Product 1',
                     price: 10000,
@@ -115,7 +115,16 @@ describe('ProductService', () => {
                     description: 'Product 1 description',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }
+                }),
+                new ProductModel({
+                    id: 2,
+                    name: 'Product 2',
+                    price: 20000,
+                    stock: 20,
+                    description: 'Product 2 description',
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                })
             ];
 
             const page = 3;

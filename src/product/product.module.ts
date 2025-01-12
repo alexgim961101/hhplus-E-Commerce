@@ -4,11 +4,13 @@ import { ProductController } from "@/product/presentation/controller/product.con
 import { ProductService } from "@/product/domain/service/product.service";
 import { PRODUCT_REPOSITORY } from "@/product/domain/repository/product.repository";
 import { ProductPrismaRepository } from "@/product/infra/repository/product.prisma.repository";
+import { ProductMapper } from "@/product/infra/mapper/prodcut.mapper";
 
 @Module({
     imports: [PrismaModule],
     providers: [
         ProductService,
+        ProductMapper,
         {
             provide: PRODUCT_REPOSITORY,
             useClass: ProductPrismaRepository

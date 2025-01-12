@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from "@/product/presentation/controller/product.controller";
 import { ProductService } from "@/product/domain/service/product.service";
 import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
+import { ProductModel } from '@/product/domain/model/product';
 
 describe('ProductController', () => {
     let controller: ProductController;
@@ -34,7 +35,7 @@ describe('ProductController', () => {
 
             const mockResponse = {
                 products: [
-                    {
+                    new ProductModel({
                         id: 1,
                         name: 'Product 1',
                         price: 10000,
@@ -42,7 +43,7 @@ describe('ProductController', () => {
                         description: 'Product 1 description',
                         createdAt: new Date(),
                         updatedAt: new Date()
-                    }
+                    })
                 ],
                 totalPages: 1,
                 currentPage: 1,
