@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { UserService } from "@/user/domain/service/user.service";
-import { CreateUserRespDto } from "@/user/domain/dto/response/create-user-resp.dto";
+import { CreateUserRespDto } from "@/user/presentation/dto/response/create-user-resp.dto";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CreateUserReqDto } from "@/user/domain/dto/request/create-user-req.dto";
-import { GetUserRespDto } from "@/user/domain/dto/response/get-user-resp.dto";
+import { CreateUserReqDto } from "@/user/presentation/dto/request/create-user-req.dto";
+import { GetUserRespDto } from "@/user/presentation/dto/response/get-user-resp.dto";
 
 @ApiTags('User')
 @Controller('user')
