@@ -53,17 +53,4 @@ export class ProductService {
             throw new BadRequestException('상품 수량이 부족합니다.');
         }
     }
-
-    async processOrderProduct(productId: number, amount: number, tx: any) {
-        const product = await this.getProductWithLock(productId, tx);
-        await this.validateProduct(product, amount);
-        await this.decreaseStock(product.id, product.stock - amount, tx);
-        
-        return {
-            productId: product.id,
-            amount,
-            price: product.price,
-            sum: product.price * amount
-        };
-    }
 }

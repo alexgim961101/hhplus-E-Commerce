@@ -1,19 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../prisma/prisma.service";
-import { UserRepositoryInterface } from "../domain/user.repository.interface";
+import { PrismaService } from "@/prisma/prisma.service";
+import { UserRepositoryInterface } from "@/user/domain/repository/user.repository.interface";
+import { UserMapper } from "@/user/domain/mapper/user.mapper";
+import { UserModel } from "@/user/domain/model/user.model";
 import { User } from "@prisma/client";
-import { CreateUserDto } from "../domain/dto/create-user.dto";
-import { UpdateUserDto } from "../domain/dto/update-user.dto";
 
 @Injectable()
 export class UserRepository implements UserRepositoryInterface {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService, private readonly userMapper: UserMapper) {}
 
-    async findById(id: number, tx?: any): Promise<User | null> {
+    async findById(id: number, tx?: any): Promise<UserModel | null> {
         const prisma = tx || this.prisma;
-        return await prisma.user.findUnique({ where: { id } });
+        const user = await prisma.user.findUnique({ where: { id } });
+        return this.userMapper.toDomain(user);
     }
-    async findByIdWithLock(id: number, tx?: any): Promise<User | null> {
+    async findByIdWithLock(id: number, tx?: any): Promise<UserModel | null> {
         const prisma = tx || this.prisma;
         const [result] = await prisma.$queryRaw<User>`
             SELECT id, points, createdAt, updatedAt 
@@ -21,24 +22,26 @@ export class UserRepository implements UserRepositoryInterface {
             WHERE id = ${id} 
             FOR UPDATE
         `;
-        return result || null;
+        return this.userMapper.toDomain(result) || null;
     }
-    async findAll(): Promise<User[]> {
-        return await this.prisma.user.findMany();
+    async findAll(): Promise<UserModel[]> {
+        const users = await this.prisma.user.findMany();
+        return this.userMapper.toDomainList(users);
     }
-    async create(createUserDto: CreateUserDto): Promise<User> {
-        return await this.prisma.user.create({ data: createUserDto });
+    async create(userModel: UserModel): Promise<UserModel> {
+        const user = await this.prisma.user.create({ data: userModel });
+        return this.userMapper.toDomain(user);
     }
-    async update(userId: number, updateUserDto: UpdateUserDto, tx?: any): Promise<User> {
+    async update(userModel: UserModel, tx?: any): Promise<UserModel> {
         const prisma = tx || this.prisma;
-        return await prisma.user.update({
-            where: { id: userId },
-            data: {
-                points: updateUserDto.points
-            }
+        const user = await prisma.user.update({
+            where: { id: userModel.id },
+            data: userModel
         });
+        return this.userMapper.toDomain(user);
     }
-    async delete(id: number): Promise<void> {
-        await this.prisma.user.delete({ where: { id } });
+    async delete(id: number): Promise<UserModel> {
+        const user = await this.prisma.user.delete({ where: { id } });
+        return this.userMapper.toDomain(user);
     }
 }   

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CouponFacadeService } from '@/coupon/application/coupon.facade.service';
 import { CouponService } from '@/coupon/domain/service/coupon.service';
-import { UserService } from '@/user/domain/user.service';
+import { UserService } from '@/user/domain/service/user.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { NotFoundException } from '@nestjs/common';
 

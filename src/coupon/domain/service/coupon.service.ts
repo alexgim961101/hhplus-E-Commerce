@@ -76,17 +76,4 @@ export class CouponService {
             ? Math.floor(totalAmount * (coupon.discountAmount / 100))
             : coupon.discountAmount;
     }
-
-    async processCouponDiscount(data: ProcessCouponDiscountDto) {
-        if (!data.couponId) return 0;
-
-        const coupon = await this.getCouponWithLock(data.couponId, data.tx);
-        const couponHistory = await this.getCouponHistory(data.couponId, data.userId, data.tx);
-        
-        await this.validateCoupon(coupon, couponHistory);
-        const discountAmount = this.calculateDiscountAmount(coupon, data.totalAmount);
-        await this.useCoupon(couponHistory.id, data.tx);
-
-        return discountAmount;
-    }
 }

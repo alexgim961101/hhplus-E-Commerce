@@ -5,8 +5,9 @@ import { CouponModule } from '@/coupon/coupon.module';
 import { UserModule } from '@/user/user.module';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { Logger } from '@nestjs/common';
-import * as fs from 'fs';
-import * as path from 'path';
+import { createTable } from '../../common/create-table';
+import { insertData } from '../../common/insert-data';
+import { deleteTable } from '../../common/delete-table';
 
 describe('쿠폰 발급 통합 테스트', () => {
     let couponFacadeService: CouponFacadeService;
@@ -24,30 +25,15 @@ describe('쿠폰 발급 통합 테스트', () => {
 
     beforeEach(async () => {
         // 테이블 생성 SQL 실행
-        const createTableSQL = fs.readFileSync(
-            path.join(__dirname, '../../it/create-table.sql'),
-            'utf8'
-        );
-        for (const sql of createTableSQL.split(";").filter((s) => s.trim() !== "")) {
-            await prisma.$executeRawUnsafe(sql);
-        }
+        await createTable(prisma);
 
         // 초기 데이터 삽입 SQL 실행
-        const importSQL = fs.readFileSync(
-            path.join(__dirname, '../../it/import.sql'),
-            'utf8'
-        );
-        for (const sql of importSQL.split(";").filter((s) => s.trim() !== "")) {
-            await prisma.$executeRawUnsafe(sql);
-        }
+        await insertData(prisma);
     });
 
     afterEach(async () => {
         // 테이블 삭제
-        await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS PointHistory');
-        await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS CouponHistory');
-        await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Coupon');
-        await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS User');
+        await deleteTable(prisma);
     });
 
     afterAll(async () => {

@@ -1,9 +1,9 @@
-import { Order, OrderProduct } from "@prisma/client";
+import { Orders, OrderProduct } from "@prisma/client";
 import { OrderCreateDto } from "@/order/domain/dto/order-create.dto";
 
 export interface IOrderRepository {
     createOrderProduct(orderProduct: { orderId: number; productId: number; amount: number; }, tx: any): Promise<OrderProduct>;
-    createOrder(order: OrderCreateDto, tx: any): Promise<Order>;
+    createOrder(order: OrderCreateDto, tx: any): Promise<Orders>;
 }
 
 export const ORDER_REPOSITORY = Symbol('ORDER_REPOSITORY');

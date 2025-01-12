@@ -1,4 +1,4 @@
-import { UserService } from "@/user/domain/user.service";
+import { UserService } from "@/user/domain/service/user.service";
 import { PointService } from "@/point/domain/point.service";
 import { PointFacade } from "@/point/application/point.facade";
 import { PrismaService } from "@/prisma/prisma.service";

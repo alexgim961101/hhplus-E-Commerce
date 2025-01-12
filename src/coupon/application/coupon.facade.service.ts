@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CouponService } from "@/coupon/domain/service/coupon.service";
-import { UserService } from "@/user/domain/user.service";
+import { UserService } from "@/user/domain/service/user.service";
 import { Coupon, CouponHistory } from "@prisma/client";
 import { PrismaService } from "@/prisma/prisma.service";
 

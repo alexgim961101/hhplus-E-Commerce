@@ -5,8 +5,10 @@ import { OrderModule } from '@/order/order.module';
 import { CouponModule } from '@/coupon/coupon.module';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { ProductModule } from '@/product/product.module';
-import * as fs from 'fs';
-import * as path from 'path';
+import { createTable } from '../../common/create-table';
+import { insertData } from '../../common/insert-data';
+import { deleteTable } from '../../common/delete-table';
+import { Logger } from '@nestjs/common';
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;
@@ -18,38 +20,26 @@ describe('상품 주문 통합 테스트', () => {
       imports: [OrderModule, ProductModule, CouponModule, PrismaModule]
     }).compile();
 
+    // 로거 설정 추가
+    module.useLogger(new Logger()); 
+
     orderFacadeService = module.get<OrderFacadeService>(OrderFacadeService);
     prisma = module.get<PrismaService>(PrismaService);
   });
 
   beforeEach(async () => {
     // 테이블 생성 SQL 실행
-    const createTableSQL = fs.readFileSync(
-        path.join(__dirname, '../../it/create-table.sql'),
-        'utf8'
-    );
-    for (const sql of createTableSQL.split(";").filter((s) => s.trim() !== "")) {
-        await prisma.$executeRawUnsafe(sql);
-    }
+    await createTable(prisma);
 
     // 초기 데이터 삽입 SQL 실행
-    const importSQL = fs.readFileSync(
-        path.join(__dirname, '../../it/import.sql'),
-        'utf8'
-    );
-    for (const sql of importSQL.split(";").filter((s) => s.trim() !== "")) {
-        await prisma.$executeRawUnsafe(sql);
-    }
+    await insertData(prisma);
   });
 
   afterEach(async () => {
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS OrderDetail');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Orders');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS CouponHistory');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Coupon');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Product');
-    await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS User');
+    // 테이블 삭제
+    await deleteTable(prisma);
   });
+
 
   describe('동시성 테스트', () => {
     it('재고가 10개인 상품을 5개씩 3번 동시에 주문하면 하나는 실패해야 한다', async () => {
@@ -76,6 +66,8 @@ describe('상품 주문 통합 테스트', () => {
         result => result.status === 'rejected'
       ).length;
 
+      console.log(`successOrders: ${successOrders}`);
+      console.log(`failedOrders: ${failedOrders}`);
       expect(successOrders).toBe(2);
       expect(failedOrders).toBe(1);
 
