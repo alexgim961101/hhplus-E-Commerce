@@ -1,3 +1,4 @@
+import { PointModel } from "@/point/domain/model/point";
 import { ApiProperty } from "@nestjs/swagger";
 import { PointHistory } from "@prisma/client";
 
@@ -26,12 +27,12 @@ export class ChargePointResponseDto {
     })
     transactionType: string
 
-    static from(pointHistory: PointHistory): ChargePointResponseDto {
+    static from(point: PointModel): ChargePointResponseDto {
         return {
-            id: pointHistory.id,
-            userId: pointHistory.userId,
-            point: pointHistory.points,
-            transactionType: pointHistory.transactionType,
+            id: point.id,
+            userId: point.userId,
+            point: point.points,
+            transactionType: point.transactionType as unknown as string,
         };
     }
 }

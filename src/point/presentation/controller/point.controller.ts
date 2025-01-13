@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
-import { ChargePointReqDto } from "@/point/presentation/dto/charge-point.req.dto";
-import { PointFacade } from "@/point/application/point.facade";
-import { ChargePointResponseDto } from "@/point/presentation/dto/charge-point.resp.dto";
-import { GetPointResponseDto } from "@/point/presentation/dto/get-point.resp.dto";
+import { ChargePointReqDto } from "@/point/presentation/dto/request/charge-point-req.dto";
+import { PointFacade } from "@/point/application/facade/point.facade";
+import { ChargePointResponseDto } from "@/point/presentation/dto/response/charge-point-resp.dto";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { GetPointResponseDto } from "@/point/presentation/dto/response/get-point.resp.dto";
 
 @ApiTags('Point')
 @Controller("point")

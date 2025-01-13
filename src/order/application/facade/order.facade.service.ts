@@ -25,8 +25,8 @@ export class OrderFacadeService {
 
       for (const item of orderProductReqDto.products) {
         const product = await this.productService.getProductWithLock(item.productId, tx);
-        await this.productService.validateProduct(product, item.amount);
-        await this.productService.decreaseStock(product.id, product.stock - item.amount, tx);
+        product.decreaseStock(item.amount);
+        await this.productService.decreaseStock(product, item.amount, tx);
         processedProducts.push({
           productId: product.id,
           amount: item.amount,

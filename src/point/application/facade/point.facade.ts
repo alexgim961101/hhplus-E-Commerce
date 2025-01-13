@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { PointService } from "@/point/domain/point.service";
+import { PointService } from "@/point/domain/service/point.service";
 import { UserService } from "@/user/domain/service/user.service";
-import { ChargePointReqDto } from "@/point/presentation/dto/charge-point.req.dto";
 import { PrismaService } from "@/prisma/prisma.service";
+import { ChargePointReqDto } from "@/point/presentation/dto/request/charge-point-req.dto";
 
 @Injectable()
 export class PointFacade {
