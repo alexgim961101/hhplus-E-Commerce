@@ -1,10 +1,11 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Query } from "@nestjs/common"; 
-import { PaginationCouponRespDto } from "@/coupon/presentation/dto/pagination-coupon.resp.dto";
+
 import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
 import { CouponService } from "@/coupon/domain/service/coupon.service";
 import { CouponFacadeService } from "@/coupon/application/coupon.facade.service";
-import { IssueCouponRespDto } from "@/coupon/presentation/dto/issue-coupon.resp.dto";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Controller, Get, Param, ParseIntPipe, Query, Post } from "@nestjs/common";
+import { PaginationCouponRespDto } from "@/coupon/presentation/dto/response/pagination-coupon-resp.dto";
+import { IssueCouponRespDto } from "@/coupon/presentation/dto/response/issue-coupon-resp.dto";
 
 @ApiTags('Coupon')
 @Controller('coupon')
@@ -26,7 +27,8 @@ export class CouponController {
         @Query() query: PaginationQueryDto, 
         @Param('userId', ParseIntPipe) userId: number
     ): Promise<PaginationCouponRespDto> {
-        return await this.couponService.getCouponList(userId, query.page, query.limit);
+        const result = await this.couponService.getCouponList(userId, query.page, query.limit);
+        return new PaginationCouponRespDto(result, query.page, query.limit);
     }
 
     @ApiOperation({ summary: '쿠폰 발급', description: '선착순 쿠폰을 발급받습니다.' })
@@ -44,6 +46,6 @@ export class CouponController {
         @Param('couponId', ParseIntPipe) couponId: number
     ): Promise<IssueCouponRespDto> {
         const result = await this.couponFacadeService.issueCoupon(userId, couponId);
-        return IssueCouponRespDto.from(result);
+        return new IssueCouponRespDto(result);
     }
 }
