@@ -5,7 +5,7 @@ import { CouponHistoryRepository } from "@/coupon/domain/repository/coupon-histo
 import { CouponHistoryPrismaRepository } from "@/coupon/infra/repository/coupon-history.prisma.repository";
 import { CouponService } from "@/coupon/domain/service/coupon.service";
 import { UserModule } from "@/user/user.module";
-import { CouponFacadeService } from "@/coupon/application/coupon.facade.service";
+import { CouponFacadeService } from "@/coupon/application/facade/coupon.facade.service";
 import { PrismaModule } from "@/prisma/prisma.module";
 import { CouponHistoryMapper } from "@/coupon/infra/mapper/coupone-history.mapper";
 import { CouponMapper } from "@/coupon/infra/mapper/coupon.mapper";

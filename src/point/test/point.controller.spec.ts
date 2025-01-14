@@ -1,10 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { PointFacade } from "@/point/application/point.facade";
+import { PointFacade } from "@/point/application/facade/point.facade";
 import { PointController } from "@/point/presentation/controller/point.controller";
-import { PointService } from "@/point/domain/point.service";
-import { ChargePointReqDto } from "@/point/presentation/dto/charge-point.req.dto";
-import { TransactionType } from "@prisma/client";
+import { PointService } from "@/point/domain/service/point.service";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { ChargePointReqDto } from "../presentation/dto/request/charge-point-req.dto";
+import { PointModel, TransactionType } from "../domain/model/point";
 
 describe('PointController', () => {
     let controller: PointController;
@@ -46,11 +46,17 @@ describe('PointController', () => {
                 updatedAt: new Date()
             };
 
-            const chargePointDto: ChargePointReqDto = {
+            const chargePoint: PointModel = {
+                id: 1,
                 userId: 1,
-                points: 10000
+                points: 10000,
+                transactionType: TransactionType.CHARGE,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
-            jest.spyOn(pointFacade, 'chargePoint').mockResolvedValue(mockPointHistory);
+            jest.spyOn(pointFacade, 'chargePoint').mockResolvedValue(chargePoint);
 
             // When
             const result = await controller.chargePoint(chargePointDto);

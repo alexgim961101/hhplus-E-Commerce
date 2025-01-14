@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/prisma/prisma.service';
-import { PointHistoryPrismaRepository } from '@/point/infra/point-history.prisma.repository';
+import { PointHistoryPrismaRepository } from '@/point/infra/repository/point-history.prisma.repository';
 import { TransactionType } from '@prisma/client';
 
 describe('PointHistoryPrismaRepository', () => {

@@ -1,7 +1,7 @@
 
 import { PaginationQueryDto } from "@/common/dto/pagination-query.dto";
 import { CouponService } from "@/coupon/domain/service/coupon.service";
-import { CouponFacadeService } from "@/coupon/application/coupon.facade.service";
+import { CouponFacadeService } from "@/coupon/application/facade/coupon.facade.service";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Controller, Get, Param, ParseIntPipe, Query, Post } from "@nestjs/common";
 import { PaginationCouponRespDto } from "@/coupon/presentation/dto/response/pagination-coupon-resp.dto";

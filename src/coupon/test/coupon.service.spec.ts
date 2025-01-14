@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CouponService } from '@/coupon/domain/service/coupon.service';
 import { CouponRepository } from '@/coupon/domain/repository/coupon.repository';
 import { CouponHistoryRepository } from '@/coupon/domain/repository/coupon-history.repository';
-import { Coupon } from '@prisma/client';
+import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
 
 describe('CouponService', () => {
     let service: CouponService;
@@ -42,36 +42,33 @@ describe('CouponService', () => {
             const page = 1;
             const limit = 10;
             
-            const mockCoupons: Coupon[] = [
+            const mockCoupons: CouponModel[] = [
                 {
                     id: 1,
                     title: 'Test Coupon',
                     description: 'Test Description',
-                    discountType: 'PERCENTAGE',
+                    discountType: DiscountType.PERCENTAGE,
                     discountAmount: 10,
                     validFrom: new Date(),
                     validTo: new Date(),
                     maxCount: 100,
                     currentCount: 50,
                     createdAt: new Date(),
-                    updatedAt: new Date()
+                    updatedAt: new Date(),
+                    checkCouponDateValidity: jest.fn(),
+                    issueCoupon: jest.fn(),
+                    checkCouponCountValidity: jest.fn()
                 }
             ];
 
-            jest.spyOn(couponHistoryRepository, 'findAvailableCouponByUserId').mockResolvedValue({
-                coupons: mockCoupons,
-                total: 1
-            });
+            jest.spyOn(couponHistoryRepository, 'findAvailableCouponByUserId').mockResolvedValue(mockCoupons);
 
             // When
             const result = await service.getCouponList(userId, page, limit);
 
             // Then
             expect(couponHistoryRepository.findAvailableCouponByUserId).toHaveBeenCalledWith(userId, page, limit);
-            expect(result.coupons).toEqual(mockCoupons);
-            expect(result.totalPage).toBe(1);
-            expect(result.currentPage).toBe(page);
-            expect(result.totalCount).toBe(1);
+            expect(result).toEqual(mockCoupons);
         });
 
         it('쿠폰이 없을 경우 빈 배열을 반환해야 한다', async () => {
@@ -80,18 +77,13 @@ describe('CouponService', () => {
             const page = 1;
             const limit = 10;
 
-            jest.spyOn(couponHistoryRepository, 'findAvailableCouponByUserId').mockResolvedValue({
-                coupons: [],
-                total: 0
-            });
+            jest.spyOn(couponHistoryRepository, 'findAvailableCouponByUserId').mockResolvedValue([]);
 
             // When
             const result = await service.getCouponList(userId, page, limit);
 
             // Then
-            expect(result.coupons).toEqual([]);
-            expect(result.totalCount).toBe(0);
-            expect(result.totalPage).toBe(0);
+            expect(result).toEqual([]);
         });
     });
 }); 

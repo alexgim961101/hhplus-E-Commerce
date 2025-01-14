@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CouponHistoryPrismaRepository } from '../infra/repository/coupon-history.prisma.repository';
+import { CouponHistoryMapper } from '../infra/mapper/coupone-history.mapper';
+import { CouponMapper } from '../infra/mapper/coupon.mapper';
 
 describe('CouponHistoryPrismaRepository', () => {
     let repository: CouponHistoryPrismaRepository;
@@ -14,6 +16,18 @@ describe('CouponHistoryPrismaRepository', () => {
                     provide: PrismaService,
                     useValue: {
                         $queryRaw: jest.fn()
+                    }
+                },
+                {
+                    provide: CouponHistoryMapper,
+                    useValue: {
+                        toDomainList: jest.fn()
+                    }
+                },
+                {
+                    provide: CouponMapper,
+                    useValue: {
+                        toDomainList: jest.fn()
                     }
                 }
             ]

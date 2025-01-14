@@ -1,11 +1,12 @@
 import { UserService } from "@/user/domain/service/user.service";
-import { PointService } from "@/point/domain/point.service";
-import { PointFacade } from "@/point/application/point.facade";
+import { PointService } from "@/point/domain/service/point.service";
+import { PointFacade } from "@/point/application/facade/point.facade";
 import { PrismaService } from "@/prisma/prisma.service";
 import { Test, TestingModule } from "@nestjs/testing";
-import { TransactionType, User } from "@prisma/client";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { PrismaModule } from "@/prisma/prisma.module";
+import { UserModel } from "@/user/domain/model/user.model";
+import { PointModel, TransactionType } from "../domain/model/point";
 
 describe('PointFacade', () => {
     let pointFacade: PointFacade;
@@ -50,20 +51,24 @@ describe('PointFacade', () => {
     describe('chargePoint', () => {
         it('정상적인 포인트 충전 요청이 처리되어야 한다', async () => {
             // Given
-            const mockUser: User = {
+            const mockUser: UserModel = {
                 id: 1,
                 points: 5000,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                usePoint: jest.fn(),
+                chargePoint: jest.fn()
             };
         
-            const mockPointHistory = {
+            const mockPointHistory: PointModel = {
                 id: 1,
                 userId: 1,
                 points: 10000,
                 transactionType: TransactionType.CHARGE,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
 
             const chargePointDto = {
@@ -72,7 +77,7 @@ describe('PointFacade', () => {
             };
             
             jest.spyOn(userService, 'getUserWithLock').mockResolvedValue(mockUser);
-            jest.spyOn(userService, 'chargePoint').mockResolvedValue({...mockUser, points: 15000});
+            jest.spyOn(userService, 'chargePoint').mockResolvedValue(mockUser);
             jest.spyOn(pointService, 'savePointHistory').mockResolvedValue(mockPointHistory);
 
             // When
@@ -107,11 +112,13 @@ describe('PointFacade', () => {
 
         it('최대 보유 한도(10억)를 초과하는 경우 BadRequestException이 발생해야 한다', async () => {
             // Given
-            const mockUser: User = {
+            const mockUser: UserModel = {
                 id: 1,
                 points: 5000,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                usePoint: jest.fn(),
+                chargePoint: jest.fn()
             };
 
             const chargePointDto = {
@@ -119,10 +126,7 @@ describe('PointFacade', () => {
                 points: 1000000000
             };
             
-            jest.spyOn(userService, 'getUserWithLock').mockResolvedValue({
-                ...mockUser,
-                points: 1000005000
-            });
+            jest.spyOn(userService, 'getUserWithLock').mockResolvedValue(mockUser);
 
             // When & Then
             await expect(pointFacade.chargePoint(chargePointDto))
@@ -135,11 +139,13 @@ describe('PointFacade', () => {
         it('사용자의 잔액이 정상적으로 조회되어야 한다', async () => {
             // Given
             const userId = 1;
-            const mockUser = {
+            const mockUser: UserModel = {
                 id: userId,
                 points: 50000,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                usePoint: jest.fn(),
+                chargePoint: jest.fn()
             };
             
             jest.spyOn(userService, 'getUser').mockResolvedValue(mockUser);

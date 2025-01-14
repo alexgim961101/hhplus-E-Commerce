@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { POINT_HISTORY_REPOSITORY, PointHistoryRepositoryInterface } from "@/point/domain/point-history.repository";
-import { PointService } from "@/point/domain/point.service";
-import { TransactionType } from "@prisma/client";
+import { POINT_HISTORY_REPOSITORY, PointHistoryRepositoryInterface } from "@/point/domain/repository/point-history.repository";
+import { PointService } from "@/point/domain/service/point.service";
+import { PointModel, TransactionType } from "@/point/domain/model/point";
 
 describe('PointService', () => {
     let pointService: PointService;
@@ -31,13 +31,15 @@ describe('PointService', () => {
             const points = 10000;
             const type = 'charge';
             
-            const mockPointHistory = {
+            const mockPointHistory: PointModel = {
                 id: 1,
                 userId: 1,
                 points: 10000,
                 transactionType: TransactionType.CHARGE,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
 
             jest.spyOn(pointHistoryRepository, 'create').mockResolvedValue(mockPointHistory);
@@ -60,13 +62,15 @@ describe('PointService', () => {
             const points = 10000;
             const type = 'charge';
             
-            const mockPointHistory = {
+            const mockPointHistory: PointModel = {
                 id: 1,
                 userId: 1,
                 points: 10000,
                 transactionType: TransactionType.CHARGE,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
 
             jest.spyOn(pointHistoryRepository, 'create').mockResolvedValue(mockPointHistory);
@@ -88,18 +92,26 @@ describe('PointService', () => {
             const points = 10000;
             const type = 'use';
             
-            const mockPointHistory = {
+            const mockPointHistory: PointModel = {
                 id: 1,
                 userId: 1,
                 points: 10000,
                 transactionType: TransactionType.CHARGE,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
 
-            const usePointHistory = {
-                ...mockPointHistory,
-                transactionType: TransactionType.USE
+            const usePointHistory: PointModel = {
+                id: 1,
+                userId: 1,
+                points: 10000,
+                transactionType: TransactionType.USE,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
             
             jest.spyOn(pointHistoryRepository, 'create').mockResolvedValue(usePointHistory);
@@ -122,13 +134,15 @@ describe('PointService', () => {
             const type = 'charge';
             const mockTx = { /* mock transaction object */ };
             
-            const mockPointHistory = {
+            const mockPointHistory: PointModel = {
                 id: 1,
                 userId: 1,
                 points: 10000,
                 transactionType: TransactionType.CHARGE,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                savePoint: jest.fn(),
+                usePoint: jest.fn()
             };
 
             jest.spyOn(pointHistoryRepository, 'create').mockResolvedValue(mockPointHistory);

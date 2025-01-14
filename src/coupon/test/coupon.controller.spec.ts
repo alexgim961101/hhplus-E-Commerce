@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CouponController } from '@/coupon/presentation/controller/coupon.controller';
 import { CouponService } from '@/coupon/domain/service/coupon.service';
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto';
-import { DiscountType } from '@prisma/client';
-import { CouponFacadeService } from '@/coupon/application/coupon.facade.service';
+import { CouponFacadeService } from '@/coupon/application/facade/coupon.facade.service';
+import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
 
 describe('CouponController', () => {
     let controller: CouponController;
@@ -43,26 +43,19 @@ describe('CouponController', () => {
                 limit: 10
             };
 
-            const mockResponse = {
-                coupons: [
-                    {
-                        id: 1,
-                        title: 'Test Coupon',
-                        description: 'Test Description',
-                        discountType: DiscountType.PERCENTAGE,
-                        discountAmount: 10,
-                        validFrom: new Date(),
-                        validTo: new Date(),
-                        maxCount: 100,
-                        currentCount: 50,
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    }
-                ],
-                totalPage: 1,
-                currentPage: 1,
-                totalCount: 1
-            };
+            const mockResponse: CouponModel[] = [
+                new CouponModel({
+                    id: 1,
+                    title: 'test',
+                    description: 'test',
+                    discountType: DiscountType.PERCENTAGE,
+                    discountAmount: 10,
+                    validFrom: new Date(),
+                    validTo: new Date(),
+                    maxCount: 100,
+                    currentCount: 0
+                })
+            ]
 
             jest.spyOn(couponService, 'getCouponList').mockResolvedValue(mockResponse);
 
