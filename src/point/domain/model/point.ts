@@ -17,7 +17,7 @@ export enum TransactionType {
 export class PointModel {
     id?: number;
     userId?: number;
-    points?: number;
+    points?: number = 0;
     transactionType?: TransactionType;
     createdAt?: Date;
     updatedAt?: Date;

@@ -9,12 +9,19 @@ export class OrderPrismaRepository implements IOrderRepository {
 
     async createOrder(order: { userId: number; orderSubtotal: number; discount: number; orderTotal: number; couponId: number; orderStatus: "PENDING"; }, tx?: any): Promise<Orders> {
         const prisma = tx || this.prisma;
-        return await prisma.order.create({
-            data: order
+        return await prisma.orders.create({
+            data: {
+                userId: order.userId,
+                couponId: order.couponId,
+                orderSubtotal: order.orderSubtotal,
+                discount: order.discount,
+                orderTotal: order.orderTotal,
+                orderStatus: order.orderStatus
+            }
         });
     }
 
-    async createOrderProduct(orderProduct: { orderId: number; productId: any; amount: any; }, tx: any): Promise<OrderProduct> {
+    async createOrderProduct(orderProduct: { orderId: number; productId: number; quantity: number; itemTotal: number; }, tx: any): Promise<OrderProduct> {
         const prisma = tx || this.prisma;
         return await prisma.orderProduct.create({
             data: orderProduct

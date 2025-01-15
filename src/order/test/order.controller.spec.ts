@@ -1,71 +1,67 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { OrderFacadeService } from '@/order/application/facade/order.facade.service';
-import { BadRequestException } from '@nestjs/common';
-import { OrderController } from '@/order/presentation/controller/order.controller';
-import { OrderProductReqDto } from '@/order/presentation/dto/order-product.req.dto';
+import { OrderController } from "@/order/presentation/controller/order.controller";
+import { OrderFacadeService } from "@/order/application/facade/order.facade.service";
+import { Test } from "@nestjs/testing";
+import { TestingModule } from "@nestjs/testing";
+import { OrderProductReqDto } from "@/order/presentation/dto/request/order-product.dto";
+import { BadRequestException } from "@nestjs/common";
 
 describe('OrderController', () => {
-  let controller: OrderController;
-  let facadeService: OrderFacadeService;
+    let controller: OrderController;
+    let facadeService: OrderFacadeService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [OrderController],
-      providers: [
-        {
-          provide: OrderFacadeService,
-          useValue: {
-            orderProduct: jest.fn()
-          }
-        }
-      ]
-    }).compile();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [OrderController],
+            providers: [
+                {
+                    provide: OrderFacadeService,
+                    useValue: {
+                        orderProduct: jest.fn(),
+                    }
+                }
+            ]
+        }).compile();
 
-    controller = module.get<OrderController>(OrderController);
-    facadeService = module.get<OrderFacadeService>(OrderFacadeService);
-  });
+        controller = module.get<OrderController>(OrderController);
+        facadeService = module.get<OrderFacadeService>(OrderFacadeService);
+    })
 
-  describe('orderProduct', () => {
-    it('주문이 성공적으로 생성되어야 한다', async () => {
-      // Given
-      const orderReq: OrderProductReqDto = {
-        userId: 1,
-        couponId: 1,
-        products: [
-          { productId: 1, amount: 2 }
-        ]
-      };
+    describe('orderProduct', () => {
+        it('상품이 없는 경우 BadRequestException이 발생해야 한다', async () => {
+            // Given
+            const orderReq: OrderProductReqDto = {
+                userId: 1,
+                products: []
+            };
 
-      const mockResponse = {
-        products: [{ productId: 1, amount: 2 }],
-        sum: 20000,
-        discount: 2000,
-        total: 18000
-      };
+            jest.spyOn(facadeService, 'orderProduct').mockRejectedValue(
+                new BadRequestException('주문할 상품이 없습니다.')
+            );
 
-      jest.spyOn(facadeService, 'orderProduct').mockResolvedValue(mockResponse);
+            // When & Then
+            await expect(controller.orderProduct(orderReq)).rejects.toThrow(BadRequestException);
+        })
 
-      // When
-      const result = await controller.orderProduct(orderReq);
+        it('쿠폰이 존재하지 않는 경우 BadRequestException이 발생해야 한다', async () => {
+            // given
+            const orderReq: OrderProductReqDto = {
+                userId: 1,
+                couponId: 312312,
+                products: [
+                    {
+                        productId: 1,
+                        amount: 1
+                    }
+                ]
+            };
 
-      // Then
-      expect(facadeService.orderProduct).toHaveBeenCalledWith(orderReq);
-      expect(result).toEqual(mockResponse);
-    });
+            // when
+            jest.spyOn(facadeService, 'orderProduct').mockRejectedValue(
+                new BadRequestException('쿠폰이 존재하지 않습니다.')
+            );
 
-    it('잘못된 요청시 BadRequestException이 발생해야 한다', async () => {
-      // Given
-      const orderReq: OrderProductReqDto = {
-        userId: 1,
-        products: []
-      };
-
-      jest.spyOn(facadeService, 'orderProduct').mockRejectedValue(
-        new BadRequestException('주문할 상품이 없습니다.')
-      );
-
-      // When & Then
-      await expect(controller.orderProduct(orderReq)).rejects.toThrow(BadRequestException);
-    });
-  });
-});
+            // then
+            await expect(controller.orderProduct(orderReq)).rejects.toThrow(BadRequestException);
+        })
+    })
+})

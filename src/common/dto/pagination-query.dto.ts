@@ -5,10 +5,10 @@ export class PaginationQueryDto {
     @Transform(({ value }) => parseInt(value))
     @IsOptional()
     @IsNumber()
-    page?: number;
+    page?: number = 1;
 
     @Transform(({ value }) => parseInt(value))
     @IsOptional()
     @IsNumber()
-    limit?: number;
+    limit?: number = 20;
 }

@@ -6,6 +6,8 @@ import { OrderService } from "@/order/domain/service/order.service";
 import { OrderFacadeService } from "@/order/application/facade/order.facade.service";
 import { ProductModule } from "@/product/product.module";
 import { CouponModule } from "@/coupon/coupon.module";
+import { ORDER_PRODUCT_REPOSITORY } from "@/order/domain/repository/order-product.repository";
+import { OrderProductPrismaRepository } from "@/order/infra/repository/order-product.prisma.repository";
 
 @Module({
   imports: [ProductModule, CouponModule],
@@ -16,6 +18,10 @@ import { CouponModule } from "@/coupon/coupon.module";
       provide: ORDER_REPOSITORY,
       useClass: OrderPrismaRepository,
     },
+    {
+      provide: ORDER_PRODUCT_REPOSITORY,
+      useClass: OrderProductPrismaRepository,
+    },  
   ],
   controllers: [OrderController],
   exports: [OrderFacadeService, OrderService],

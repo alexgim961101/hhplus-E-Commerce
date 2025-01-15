@@ -14,5 +14,5 @@ model Coupon {
     maxCount Int
     currentCount Int
     createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    updatedAt DateTime? @updatedAt
 }

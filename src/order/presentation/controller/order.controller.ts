@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { OrderFacadeService } from "@/order/application/facade/order.facade.service";
-import { OrderProductReqDto } from "@/order/presentation/dto/order-product.req.dto";
-import { OrderProductRespDto } from "@/order/presentation/dto/order-product.resp.dto";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { OrderProductRespDto } from "@/order/presentation/dto/response/order-product.dto";
+import { OrderProductReqDto } from "@/order/presentation/dto/request/order-product.dto";
 
 @ApiTags('Order')
 @Controller('order')

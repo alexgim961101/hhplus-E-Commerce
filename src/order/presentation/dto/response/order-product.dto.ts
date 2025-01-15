@@ -12,6 +12,18 @@ export class OrderProductItemRespDto {
     example: 2
   })
   amount: number;
+
+  @ApiProperty({
+    description: '단일 상품 금액',
+    example: 10000
+  })
+  price: number;
+
+  @ApiProperty({
+    description: '상품 총 금액',
+    example: 20000
+  })
+  totalPrice: number;
 }
 
 export class OrderProductRespDto {

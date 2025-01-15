@@ -32,7 +32,11 @@ export class ProductService {
     }
 
     async getProductWithLock(productId: number, tx: any): Promise<ProductModel> {
-        return await this.productRepository.findByIdWithLock(productId, tx);
+        const product = await this.productRepository.findByIdWithLock(productId, tx);
+        if (!product) {
+            throw new BadRequestException('상품이 존재하지 않습니다.');
+        }
+        return product;
     }
 
     async decreaseStock(product: ProductModel, amount: number, tx: any) {

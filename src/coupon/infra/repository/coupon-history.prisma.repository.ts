@@ -14,12 +14,12 @@ export class CouponHistoryPrismaRepository implements CouponHistoryRepository {
     async findAvailableCouponByUserId(userId: number, page: number, limit: number, tx?: any): Promise<CouponModel[]> {
         const prisma = tx || this.prisma;
         const result = await prisma.$queryRaw`
-            SELECT c.*, ch.userId, ch.isUsed FROM coupon c
-            JOIN coupon_history ch ON c.id = ch.couponId
+            SELECT c.*, ch.userId, ch.isUsed FROM Coupon c
+            JOIN CouponHistory ch ON c.id = ch.couponId
             WHERE ch.userId = ${userId}
                 AND ch.isUsed = false
-                AND c.valid_to > NOW()
-            ORDER BY c.valid_to ASC
+                AND c.validTo > NOW()
+            ORDER BY c.validTo ASC
             LIMIT ${limit}
             OFFSET ${(page - 1) * limit}
         `

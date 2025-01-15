@@ -1,10 +1,11 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { OrderService } from "@/order/domain/service/order.service";
-import { OrderProductReqDto } from "@/order/presentation/dto/order-product.req.dto";
-import { OrderProductRespDto } from "@/order/presentation/dto/order-product.resp.dto";
 import { ProductService } from "@/product/domain/service/product.service";
 import { CouponService } from "@/coupon/domain/service/coupon.service";
 import { PrismaService } from "@/prisma/prisma.service";
+import { OrderProductReqDto } from "@/order/presentation/dto/request/order-product.dto";
+import { OrderStatus } from "@/order/domain/model/order";
+import { OrderProductRespDto } from "@/order/presentation/dto/response/order-product.dto";
 
 @Injectable()
 export class OrderFacadeService {
@@ -20,50 +21,68 @@ export class OrderFacadeService {
 
   async orderProduct(orderProductReqDto: OrderProductReqDto): Promise<OrderProductRespDto> {
     return this.prisma.runInTransaction(async (tx) => {
-      const processedProducts = [];
-      let totalSum = 0;
-
-      for (const item of orderProductReqDto.products) {
-        const product = await this.productService.getProductWithLock(item.productId, tx);
-        product.decreaseStock(item.amount);
-        await this.productService.decreaseStock(product, item.amount, tx);
-        processedProducts.push({
-          productId: product.id,
-          amount: item.amount,
-          price: product.price,
-          sum: product.price * item.amount
-        });
-        totalSum += product.price * item.amount;
-      }
-
+      let subTotalPrice = 0;
       let discountAmount = 0;
+
+      // 주문한 상품들에 대한 정보 가져오기
+      const productList = await Promise.all(orderProductReqDto.products.map(async (product) => {
+        const orderProduct = await this.productService.getProductWithLock(product.productId, tx);
+        await this.productService.decreaseStock(orderProduct, product.amount, tx);
+
+        console.log(orderProduct);
+
+        // 전체 가격 확인
+        const totalPrice = orderProduct.price * product.amount;
+        subTotalPrice += totalPrice;
+
+        return {
+          productId: orderProduct.id,
+          amount: product.amount,
+          price: orderProduct.price,
+          totalPrice: totalPrice
+        };
+      }));
+
+      // 쿠폰 적용 여부 확인
       if (orderProductReqDto.couponId) {
-        const coupon = await this.couponService.getCouponWithLock(orderProductReqDto.couponId, tx);
-        const couponHistory = await this.couponService.getCouponHistory(orderProductReqDto.couponId, orderProductReqDto.userId, tx);
-        await this.couponService.validateCoupon(coupon, couponHistory);
-        discountAmount = this.couponService.calculateDiscountAmount(coupon, totalSum);
-        await this.couponService.useCoupon(couponHistory.id, tx);
+        const coupon = await this.couponService.getCoupon(orderProductReqDto.couponId, tx);
+        const couponHistory = await this.couponService.getCouponHistory(coupon.id, orderProductReqDto.userId, tx);
+        
+        if (!coupon.checkCouponDateValidity(new Date())) {
+          throw new BadRequestException('쿠폰이 만료되었습니다.');
+        }
+
+        // 쿠폰 적용 여부에 따라 쿠폰 적용 (금액 차감)
+        discountAmount = this.couponService.calculateDiscountAmount(coupon, subTotalPrice);
       }
 
-
-
-      const { finalAmount } = await this.orderService.createOrderWithDetails({
+      // 주문 생성
+      const order = await this.orderService.createOrder({
         userId: orderProductReqDto.userId,
-        products: processedProducts,
-        totalSum,
-        discountAmount,
-        couponId: orderProductReqDto.couponId
+        orderSubtotal: subTotalPrice,
+        discount: discountAmount,
+        orderTotal: subTotalPrice - discountAmount,
+        couponId: orderProductReqDto.couponId,
+        orderStatus: OrderStatus.PENDING
       }, tx);
 
+      // 주문 상품 생성
+      await Promise.all(productList.map(async (product) => {
+        await this.orderService.createOrderProduct({
+          orderId: order.id,
+          productId: product.productId,
+          quantity: product.amount,
+          itemTotal: product.totalPrice
+        }, tx);
+      }));
+
       return {
-        products: processedProducts.map(p => ({
-          productId: p.productId,
-          amount: p.amount
-        })),
-        sum: totalSum,
+        orderId: order.id,
+        products: productList,
+        sum: subTotalPrice,
         discount: discountAmount,
-        total: finalAmount
-      };
+        total: subTotalPrice - discountAmount
+      }
     });
   }
 }

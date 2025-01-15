@@ -11,10 +11,11 @@ export class OrderService {
     ) {}
 
     async createOrder(order: OrderCreateDto, tx: any) {
+        console.log(order);
         return await this.orderRepository.createOrder(order, tx);
     }
 
-    async createOrderProduct(orderProduct: { orderId: number; productId: any; amount: any; }, tx: any) {
+    async createOrderProduct(orderProduct: { orderId: number; productId: number; quantity: number; itemTotal: number; }, tx: any) {
         return await this.orderRepository.createOrderProduct(orderProduct, tx);
     }
 
@@ -35,7 +36,8 @@ export class OrderService {
                 this.createOrderProduct({
                     orderId: order.id,
                     productId: product.productId,
-                    amount: product.amount,
+                    quantity: product.amount,
+                    itemTotal: product.price * product.amount
                 }, tx)
             )
         );

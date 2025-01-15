@@ -5,7 +5,13 @@ import { Product } from "@prisma/client";
 @Injectable()
 export class ProductMapper {
     toDomain(product: Product): ProductModel {
-        return new ProductModel(product);
+        return new ProductModel({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            stock: product.stock
+        });
     }
 
     toDomainList(products: Product[]): ProductModel[] {

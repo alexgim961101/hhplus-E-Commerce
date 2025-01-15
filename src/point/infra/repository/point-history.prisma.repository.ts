@@ -11,11 +11,12 @@ export class PointHistoryPrismaRepository implements PointHistoryRepositoryInter
 
     async create(point: PointModel, tx?: any): Promise<PointModel> {
         const prisma = tx || this.prisma;
+        console.log(point);
         const pointHistory = await prisma.pointHistory.create({
             data: {
                 userId: point.userId,
                 points: point.points,
-                transactionType: point.transactionType as unknown as TransactionType
+                transactionType: point.transactionType.toString() === 'CHARGE' ? TransactionType.CHARGE : TransactionType.USE
             }
         });
         return this.pointMapper.toDomain(pointHistory);

@@ -3,6 +3,7 @@ import { ProductRepository } from "@/product/domain/repository/product.repositor
 import { PrismaService } from "@/prisma/prisma.service";
 import { ProductModel } from "@/product/domain/model/product";
 import { ProductMapper } from "@/product/infra/mapper/prodcut.mapper";
+import { Product } from "@prisma/client";
 
 @Injectable()
 export class ProductPrismaRepository implements ProductRepository {
@@ -40,10 +41,10 @@ export class ProductPrismaRepository implements ProductRepository {
 
     async findByIdWithLock(productId: number, tx: any): Promise<ProductModel> {
         const prisma = tx || this.prisma;
-        const product = await prisma.$queryRaw`
-            SELECT * FROM product WHERE id = ${productId} FOR UPDATE;
+        const product = await prisma.$queryRaw<Product[]>`
+            SELECT * FROM Product WHERE id = ${productId} FOR UPDATE;
         `
-        return this.productMapper.toDomain(product);
+        return this.productMapper.toDomain(product[0]);
     }
 
     async updateStock(id: number, stock: number, tx: any): Promise<ProductModel> {
