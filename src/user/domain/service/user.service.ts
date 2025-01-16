@@ -1,19 +1,24 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { USER_REPOSITORY, UserRepositoryInterface } from "@/user/domain/repository/user.repository.interface";
 import { UserModel } from "@/user/domain/model/user.model";
 import { CreateUserReqDto } from "@/user/presentation/dto/request/create-user-req.dto";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 
 @Injectable()
 export class UserService {
 
-    constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepositoryInterface){}
+    constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepositoryInterface, @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger){}
 
     async getUser(userId: number, tx?: any): Promise<UserModel> {
-        const user = await this.userRepository.findById(userId, tx);
-        if (!user) {
-            throw new NotFoundException('User not found');
+        try {
+            const user = await this.userRepository.findById(userId, tx);
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+            return user;
+        } catch (error) {
+            this.logger.warn(`User not found: ${userId}`);
         }
-        return user;
     }
 
     async getUserWithLock(userId: number, tx?: any): Promise<UserModel> {
