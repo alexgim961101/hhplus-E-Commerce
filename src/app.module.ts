@@ -9,8 +9,9 @@ import { CouponModule } from "@/coupon/coupon.module";
 import { OrderModule } from "@/order/order.module";
 import { WinstonModule } from "nest-winston";
 import { winstonConfig } from "./common/logger/winston.config";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
+import { GlobalExceptionFilter } from "./common/filter/global-exception.filter";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -33,6 +34,10 @@ import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter
     }
   ],
 })

@@ -4,7 +4,7 @@ import * as winston from "winston";
 export const winstonConfig: WinstonModuleOptions = {
     transports: [
         new winston.transports.Console({
-            level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
+            level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
             format: winston.format.combine(
                 winston.format.timestamp(),
                 winston.format.json(),
