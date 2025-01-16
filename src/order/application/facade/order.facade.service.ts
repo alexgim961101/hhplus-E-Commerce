@@ -29,8 +29,6 @@ export class OrderFacadeService {
         const orderProduct = await this.productService.getProductWithLock(product.productId, tx);
         await this.productService.decreaseStock(orderProduct, product.amount, tx);
 
-        console.log(orderProduct);
-
         // 전체 가격 확인
         const totalPrice = orderProduct.price * product.amount;
         subTotalPrice += totalPrice;

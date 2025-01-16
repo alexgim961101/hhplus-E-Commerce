@@ -37,13 +37,9 @@ describe('PointController', () => {
     describe('chargePoint (포인트 충전)', () => {
         it('포인트 충전 요청시 정상적으로 처리되어야 한다', async () => {
             // Given
-            const mockPointHistory = {
-                id: 1,
+            const chargePointDto: ChargePointReqDto = {
                 userId: 1,
-                points: 10000,
-                transactionType: TransactionType.CHARGE,
-                createdAt: new Date(),
-                updatedAt: new Date()
+                points: 10000
             };
 
             const chargePoint: PointModel = {

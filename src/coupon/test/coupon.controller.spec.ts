@@ -4,6 +4,7 @@ import { CouponService } from '@/coupon/domain/service/coupon.service';
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto';
 import { CouponFacadeService } from '@/coupon/application/facade/coupon.facade.service';
 import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
+import { PaginationCouponRespDto } from '../presentation/dto/response/pagination-coupon-resp.dto';
 
 describe('CouponController', () => {
     let controller: CouponController;
@@ -64,11 +65,7 @@ describe('CouponController', () => {
 
             // Then
             expect(couponService.getCouponList).toHaveBeenCalledWith(userId, query.page, query.limit);
-            expect(result).toEqual(mockResponse);
-            expect(result.coupons).toHaveLength(1);
-            expect(result.totalPage).toBe(1);
-            expect(result.currentPage).toBe(1);
-            expect(result.totalCount).toBe(1);
+            expect(result).toEqual(new PaginationCouponRespDto(mockResponse, query.page, query.limit));
         });
     });
 }); 

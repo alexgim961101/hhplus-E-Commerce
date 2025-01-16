@@ -66,8 +66,6 @@ describe('상품 주문 통합 테스트', () => {
         result => result.status === 'rejected'
       ).length;
 
-      console.log(`successOrders: ${successOrders}`);
-      console.log(`failedOrders: ${failedOrders}`);
       expect(successOrders).toBe(2);
       expect(failedOrders).toBe(1);
 

@@ -27,8 +27,6 @@ export class PointFacade {
             await this.userService.chargePoint(user, body.points, tx);
 
             // 4. 포인트 충전 내역 저장
-            console.log(body);
-            console.log(body.points);
             const pointHistory = await this.pointService.savePointHistory(
                 user.id, 
                 body.points, 

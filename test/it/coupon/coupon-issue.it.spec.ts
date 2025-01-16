@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CouponFacadeService } from '@/coupon/application/coupon.facade.service';
+import { CouponFacadeService } from '@/coupon/application/facade/coupon.facade.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CouponModule } from '@/coupon/coupon.module';
 import { UserModule } from '@/user/user.module';
@@ -48,8 +48,6 @@ describe('쿠폰 발급 통합 테스트', () => {
 
             // When
             const result = await couponFacadeService.issueCoupon(userId, couponId);
-
-            console.log(result);
 
             // Then
             expect(result.issuedCoupon).toBeDefined();

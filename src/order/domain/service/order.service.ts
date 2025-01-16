@@ -11,7 +11,6 @@ export class OrderService {
     ) {}
 
     async createOrder(order: OrderCreateDto, tx: any) {
-        console.log(order);
         return await this.orderRepository.createOrder(order, tx);
     }
 

@@ -90,26 +90,17 @@ describe('PointService', () => {
             // Given
             const userId = 1;
             const points = 10000;
-            const type = 'use';
-            
-            const mockPointHistory: PointModel = {
-                id: 1,
-                userId: 1,
-                points: 10000,
-                transactionType: TransactionType.CHARGE,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                savePoint: jest.fn(),
-                usePoint: jest.fn()
-            };
+            const type = TransactionType.USE;
+            const createdAt = new Date();
+            const updatedAt = new Date();
 
             const usePointHistory: PointModel = {
                 id: 1,
-                userId: 1,
-                points: 10000,
-                transactionType: TransactionType.USE,
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                userId: userId,
+                points: points,
+                transactionType: type,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 savePoint: jest.fn(),
                 usePoint: jest.fn()
             };
@@ -117,14 +108,14 @@ describe('PointService', () => {
             jest.spyOn(pointHistoryRepository, 'create').mockResolvedValue(usePointHistory);
 
             // When
-            await pointService.savePointHistory(userId, points, type);
+            await pointService.savePointHistory(userId, points, 'use');
 
             // Then
-            expect(pointHistoryRepository.create).toHaveBeenCalledWith({
+            expect(pointHistoryRepository.create).toHaveBeenCalledWith(new PointModel({
                 userId,
-                points,
+                points: points,
                 transactionType: TransactionType.USE
-            }, undefined);
+            }), undefined);
         });
 
         it('트랜잭션 객체가 전달되면 해당 트랜잭션 내에서 실행되어야 한다', async () => {

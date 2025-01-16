@@ -38,6 +38,6 @@ export class PointModel {
 
     usePoint(amount: number) {
         this.transactionType = TransactionType.USE;
-        this.points -= amount;
+        this.points += amount;
     }
 }
