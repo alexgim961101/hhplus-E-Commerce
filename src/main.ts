@@ -3,10 +3,12 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { AppModule } from "@/app.module";
 import * as fs from "fs";
 import { ValidationPipe } from "@nestjs/common";
+import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   const config = new DocumentBuilder()
     .setTitle("E-Commerce API")
     .setDescription("E-Commerce API 명세서")

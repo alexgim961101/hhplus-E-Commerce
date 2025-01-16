@@ -7,6 +7,9 @@ import { PointModule } from "@/point/point.module";
 import { ProductModule } from "@/product/product.module";
 import { CouponModule } from "@/coupon/coupon.module";
 import { OrderModule } from "@/order/order.module";
+import { WinstonModule } from "nest-winston";
+import winston from "winston";
+import { winstonConfig } from "./logger/winston.config";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
@@ -16,6 +19,7 @@ import { OrderModule } from "@/order/order.module";
           DATABASE_URL: Joi.string().required(),
         }),
     }),
+    WinstonModule.forRoot(winstonConfig),
     PrismaModule,
     UserModule,
     PointModule,
