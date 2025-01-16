@@ -4,6 +4,7 @@ import { AppModule } from "@/app.module";
 import * as fs from "fs";
 import { ValidationPipe } from "@nestjs/common";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
+import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

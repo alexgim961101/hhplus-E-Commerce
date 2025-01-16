@@ -8,12 +8,13 @@ import { ProductModule } from "@/product/product.module";
 import { CouponModule } from "@/coupon/coupon.module";
 import { OrderModule } from "@/order/order.module";
 import { WinstonModule } from "nest-winston";
-import winston from "winston";
-import { winstonConfig } from "./logger/winston.config";
+import { winstonConfig } from "./common/logger/winston.config";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
 
 @Module({
   imports: [ConfigModule.forRoot({ 
-      isGlobal: true,
+      isGlobal: true, 
       validationSchema: Joi.object({
           ENV: Joi.string().valid('dev', 'prod').required(),
           DATABASE_URL: Joi.string().required(),
@@ -28,6 +29,11 @@ import { winstonConfig } from "./logger/winston.config";
     OrderModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor
+    }
+  ],
 })
 export class AppModule {}
