@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from "@/product/domain/service/product.service";
 import { PRODUCT_REPOSITORY, ProductRepository } from "@/product/domain/repository/product.repository";
 import { ProductModel } from '@/product/domain/model/product';
+import { LoggerMock } from '@/common/mock/logger.mock';
 
 describe('ProductService', () => {
     let service: ProductService;
@@ -17,7 +18,8 @@ describe('ProductService', () => {
                         findAll: jest.fn(),
                         count: jest.fn()
                     }
-                }
+                },
+                LoggerMock
             ]
         }).compile();
 

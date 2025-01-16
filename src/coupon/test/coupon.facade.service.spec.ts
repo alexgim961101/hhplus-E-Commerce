@@ -7,6 +7,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UserModel } from '@/user/domain/model/user.model';
 import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
 import { CouponHistoryModel } from '@/coupon/domain/model/coupon-history';
+import { LoggerMock } from '@/common/mock/logger.mock';
 
 describe('CouponFacadeService', () => {
     let facadeService: CouponFacadeService;
@@ -38,7 +39,8 @@ describe('CouponFacadeService', () => {
                     useValue: {
                         runInTransaction: jest.fn((callback) => callback())
                     }
-                }
+                },
+                LoggerMock
             ]
         }).compile();
 

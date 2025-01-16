@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { POINT_HISTORY_REPOSITORY, PointHistoryRepositoryInterface } from "@/point/domain/repository/point-history.repository";
 import { PointService } from "@/point/domain/service/point.service";
 import { PointModel, TransactionType } from "@/point/domain/model/point";
+import { LoggerMock } from "@/common/mock/logger.mock";
 
 describe('PointService', () => {
     let pointService: PointService;
@@ -16,7 +17,8 @@ describe('PointService', () => {
                     useValue: {
                         create: jest.fn()
                     }
-                }
+                },
+                LoggerMock
             ]
         }).compile();
 

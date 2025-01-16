@@ -3,6 +3,7 @@ import { CouponService } from '@/coupon/domain/service/coupon.service';
 import { CouponRepository } from '@/coupon/domain/repository/coupon.repository';
 import { CouponHistoryRepository } from '@/coupon/domain/repository/coupon-history.repository';
 import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
+import { LoggerMock } from '@/common/mock/logger.mock';
 
 describe('CouponService', () => {
     let service: CouponService;
@@ -26,7 +27,8 @@ describe('CouponService', () => {
                         findById: jest.fn(),
                         save: jest.fn()
                     }
-                }
+                },
+                LoggerMock
             ]
         }).compile();
 
