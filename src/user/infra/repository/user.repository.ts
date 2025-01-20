@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@/prisma/prisma.service";
 import { UserRepositoryInterface } from "@/user/domain/repository/user.repository.interface";
 import { UserMapper } from "@/user/infra/mapper/user.mapper";
@@ -11,8 +11,12 @@ export class UserRepository implements UserRepositoryInterface {
 
     async findById(id: number, tx?: any): Promise<UserModel | null> {
         const prisma = tx || this.prisma;
-        const user = await prisma.user.findUnique({ where: { id } });
-        return this.userMapper.toDomain(user);
+        try {
+            const user = await prisma.user.findUnique({ where: { id } });
+            return this.userMapper.toDomain(user);
+        } catch (error) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
     }
     async findByIdWithLock(id: number, tx?: any): Promise<UserModel | null> {
         const prisma = tx || this.prisma;

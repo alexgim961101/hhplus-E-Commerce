@@ -9,16 +9,12 @@ export class UserService {
 
     constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepositoryInterface, @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger){}
 
-    async getUser(userId: number, tx?: any): Promise<UserModel> {
-        try {
-            const user = await this.userRepository.findById(userId, tx);
-            if (!user) {
-                throw new NotFoundException('User not found');
-            }
-            return user;
-        } catch (error) {
-            this.logger.warn(`User not found: ${userId}`);
+    async getUser(userId: number) {
+        const user = await this.userRepository.findById(userId);
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
         }
+        return user;
     }
 
     async getUserWithLock(userId: number, tx?: any): Promise<UserModel> {

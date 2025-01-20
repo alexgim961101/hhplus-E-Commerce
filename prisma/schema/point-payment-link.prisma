@@ -1,5 +1,0 @@
-model PointPaymentLink {
-    id        Int      @id @default(autoincrement())
-    pointHistoryId Int
-    paymentId Int
-}
