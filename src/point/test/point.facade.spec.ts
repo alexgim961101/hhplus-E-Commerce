@@ -7,6 +7,8 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { PrismaModule } from "@/prisma/prisma.module";
 import { UserModel } from "@/user/domain/model/user.model";
 import { PointModel, TransactionType } from "../domain/model/point";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { LoggerMock } from "@/common/mock/logger.mock";
 
 describe('PointFacade', () => {
     let pointFacade: PointFacade;
@@ -38,7 +40,8 @@ describe('PointFacade', () => {
                     useValue: {
                         runInTransaction: jest.fn((callback) => callback())
                     }
-                }
+                },
+                LoggerMock
             ]
         }).compile();
 
