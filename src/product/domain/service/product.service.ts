@@ -1,14 +1,17 @@
-import { Inject, Injectable, BadRequestException } from "@nestjs/common";
+import { Inject, Injectable, BadRequestException, Logger } from "@nestjs/common";
 import { PRODUCT_REPOSITORY, ProductRepository } from "../repository/product.repository";
 import { ProductModel } from "../model/product";
 import { ProductsRespDto } from "@/product/presentation/dto/response/products.dto";
 import { ProductDetailRespDto } from "@/product/presentation/dto/response/product-detail.dto";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 
 @Injectable()
 export class ProductService {
     constructor(
         @Inject(PRODUCT_REPOSITORY)
-        private readonly productRepository: ProductRepository
+        private readonly productRepository: ProductRepository,
+        @Inject(WINSTON_MODULE_PROVIDER)
+        private readonly logger: Logger
     ) {}
 
     async getProducts(page: number, limit: number): Promise<ProductsRespDto> {
@@ -32,17 +35,25 @@ export class ProductService {
     }
 
     async getProductWithLock(productId: number, tx: any): Promise<ProductModel> {
-        const product = await this.productRepository.findByIdWithLock(productId, tx);
-        if (!product) {
-            throw new BadRequestException('상품이 존재하지 않습니다.');
+        try {
+            const product = await this.productRepository.findByIdWithLock(productId, tx);
+            if (!product) {
+                throw new BadRequestException('상품이 존재하지 않습니다.');
+            }
+            return product;
+        } catch (error) {
+            this.logger.warn(`Product not found: ${productId}`);
         }
-        return product;
     }
 
     async decreaseStock(product: ProductModel, amount: number, tx: any) {
-        product.checkStock(amount);
-        product.decreaseStock(amount);
-        return await this.productRepository.updateStock(product.id, product.stock, tx);
+        try {
+            product.checkStock(amount);
+            product.decreaseStock(amount);
+            return await this.productRepository.updateStock(product.id, product.stock, tx);
+        } catch (error) {
+            this.logger.error(`Product stock decrease failed: ${product.id} ${amount}`);
+        }
     }
 
     async validateProduct(product: ProductModel, amount: number) {
