@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from "@/product/domain/service/product.service";
 import { PRODUCT_REPOSITORY, ProductRepository } from "@/product/domain/repository/product.repository";
 import { ProductModel } from '@/product/domain/model/product';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from '@/common/logger/winston.config';
 
 describe('ProductService', () => {
     let service: ProductService;
@@ -9,6 +11,7 @@ describe('ProductService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [WinstonModule.forRoot(winstonConfig)],
             providers: [
                 ProductService,
                 {
@@ -17,7 +20,7 @@ describe('ProductService', () => {
                         findAll: jest.fn(),
                         count: jest.fn()
                     }
-                }
+                },
             ]
         }).compile();
 

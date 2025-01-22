@@ -7,6 +7,8 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { PrismaModule } from "@/prisma/prisma.module";
 import { UserModel } from "@/user/domain/model/user.model";
 import { PointModel, TransactionType } from "../domain/model/point";
+import { WinstonModule } from "nest-winston";
+import { winstonConfig } from "@/common/logger/winston.config";
 
 describe('PointFacade', () => {
     let pointFacade: PointFacade;
@@ -16,7 +18,7 @@ describe('PointFacade', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [PrismaModule],
+            imports: [PrismaModule, WinstonModule.forRoot(winstonConfig)],
             providers: [
                 PointFacade,
                 {

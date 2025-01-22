@@ -3,6 +3,8 @@ import { CouponService } from '@/coupon/domain/service/coupon.service';
 import { CouponRepository } from '@/coupon/domain/repository/coupon.repository';
 import { CouponHistoryRepository } from '@/coupon/domain/repository/coupon-history.repository';
 import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from '@/common/logger/winston.config';
 
 describe('CouponService', () => {
     let service: CouponService;
@@ -11,6 +13,7 @@ describe('CouponService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [WinstonModule.forRoot(winstonConfig)],
             providers: [
                 CouponService,
                 {

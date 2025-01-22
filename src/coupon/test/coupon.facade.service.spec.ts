@@ -7,6 +7,8 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UserModel } from '@/user/domain/model/user.model';
 import { CouponModel, DiscountType } from '@/coupon/domain/model/coupon';
 import { CouponHistoryModel } from '@/coupon/domain/model/coupon-history';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from '@/common/logger/winston.config';
 
 describe('CouponFacadeService', () => {
     let facadeService: CouponFacadeService;
@@ -16,6 +18,7 @@ describe('CouponFacadeService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [WinstonModule.forRoot(winstonConfig)],
             providers: [
                 CouponFacadeService,
                 {
