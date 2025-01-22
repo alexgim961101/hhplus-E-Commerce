@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS Product (
 CREATE TABLE IF NOT EXISTS Orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
-    couponId INT NOT NULL,
+    couponId INT NULL,
     orderSubtotal INT NOT NULL,
     discount INT NOT NULL,
     orderTotal INT NOT NULL,

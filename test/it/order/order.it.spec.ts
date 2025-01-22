@@ -9,41 +9,90 @@ import { createTable } from '../../common/create-table';
 import { insertData } from '../../common/insert-data';
 import { deleteTable } from '../../common/delete-table';
 import { Logger } from '@nestjs/common';
+import { UserModel } from '@/user/domain/model/user.model';
+import { UserModule } from '@/user/user.module';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from '@/common/logger/winston.config';
+import { UserService } from '@/user/domain/service/user.service';
+import { ProductService } from '@/product/domain/service/product.service';
+import { CouponService } from '@/coupon/domain/service/coupon.service';
+import { OrderService } from '@/order/domain/service/order.service';
+import { CreateUserReqDto } from '@/user/presentation/dto/request/create-user-req.dto';
+import { OrderProductReqDto } from '@/order/presentation/dto/request/order-product.dto';
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;
+  let orderService: OrderService;
+  let userService: UserService;
+  let productService: ProductService;
+  let couponService: CouponService;
   let prisma: PrismaService;
   let module: TestingModule;
 
-  beforeAll(async () => {
-    module = await Test.createTestingModule({
-      imports: [OrderModule, ProductModule, CouponModule, PrismaModule]
-    }).compile();
-
-    // 로거 설정 추가
-    module.useLogger(new Logger()); 
-
-    orderFacadeService = module.get<OrderFacadeService>(OrderFacadeService);
-    prisma = module.get<PrismaService>(PrismaService);
-  });
 
   beforeEach(async () => {
-    // 테이블 생성 SQL 실행
-    await createTable(prisma);
+    module = await Test.createTestingModule({
+      imports: [UserModule, ProductModule, CouponModule, PrismaModule, OrderModule, WinstonModule.forRoot(winstonConfig)]
+    }).compile()
 
-    // 초기 데이터 삽입 SQL 실행
-    await insertData(prisma);
+    orderFacadeService = module.get<OrderFacadeService>(OrderFacadeService);
+    orderService = module.get<OrderService>(OrderService);
+    userService = module.get<UserService>(UserService);
+    productService = module.get<ProductService>(ProductService);
+    couponService = module.get<CouponService>(CouponService);
+    prisma = module.get<PrismaService>(PrismaService);
+
+    await prisma.orderProduct.deleteMany();
+    await prisma.orders.deleteMany();
+    await prisma.product.deleteMany();
+    await prisma.user.deleteMany();
   });
 
-  afterEach(async () => {
-    // 테이블 삭제
-    await deleteTable(prisma);
-  });
 
 
   describe('동시성 테스트', () => {
-    it('재고가 10개인 상품을 5개씩 3번 동시에 주문하면 하나는 실패해야 한다', async () => {});
+    it('재고가 10개인 상품을 5개씩 3번 동시에 주문하면 하나는 실패해야 한다', async () => {
+      // given
+      const createUserReqDto = new CreateUserReqDto();
+      createUserReqDto.points = 1000000;
+      const user = await userService.createUser(createUserReqDto)
 
-    it('동시에 같은 쿠폰을 사용한 주문이 들어와도 정상적으로 처리되어야 한다', async () => {});
+      await prisma.product.create({
+        data: {
+          id: 1,
+          name: 'test',
+          description: 'test',
+          price: 5000,
+          stock: 10
+        }
+      })
+
+      // when && then
+      let successCount = 0;
+      let failCount = 0;
+
+      const orderProductReqDto = new OrderProductReqDto();
+      orderProductReqDto.userId = user.id;
+      orderProductReqDto.products = [
+        { productId: 1, amount: 5 }
+      ]
+
+      await Promise.allSettled([
+        orderFacadeService.orderProduct(orderProductReqDto),
+        orderFacadeService.orderProduct(orderProductReqDto),
+        orderFacadeService.orderProduct(orderProductReqDto)
+      ]).then((results) => {
+        results.forEach((result) => {
+          if (result.status === 'fulfilled') {
+            successCount++;
+          } else {
+            failCount++;
+          }
+        })
+      })
+
+      expect(successCount).toBe(2);
+      expect(failCount).toBe(1);
+    });
   });
 });

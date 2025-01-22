@@ -39,7 +39,10 @@ export class OrderFacadeService {
           price: orderProduct.price,
           totalPrice: totalPrice
         };
-      }));
+      })).catch((error) => {
+        this.logger.error(`Order product failed: ${error}`);
+        throw new BadRequestException('상품 주문에 실패했습니다.');
+      });
 
       // 쿠폰 적용 여부 확인
       if (orderProductReqDto.couponId) {
@@ -60,7 +63,7 @@ export class OrderFacadeService {
         orderSubtotal: subTotalPrice,
         discount: discountAmount,
         orderTotal: subTotalPrice - discountAmount,
-        couponId: orderProductReqDto.couponId,
+        couponId: orderProductReqDto.couponId || null,
         orderStatus: OrderStatus.PENDING
       }, tx);
 

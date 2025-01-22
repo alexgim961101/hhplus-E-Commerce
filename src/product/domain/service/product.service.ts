@@ -53,6 +53,7 @@ export class ProductService {
             return await this.productRepository.updateStock(product.id, product.stock, tx);
         } catch (error) {
             this.logger.error(`Product stock decrease failed: ${product.id} ${amount}`);
+            throw new BadRequestException('상품 재고 감소에 실패했습니다.');
         }
     }
 

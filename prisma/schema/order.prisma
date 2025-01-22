@@ -10,7 +10,7 @@ enum OrderStatus {
 model Orders {
     id        Int      @id @default(autoincrement())
     userId    Int
-    couponId  Int
+    couponId  Int?
     orderSubtotal Int
     discount Int
     orderTotal Int
