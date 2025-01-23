@@ -6,6 +6,7 @@ export interface UserRepositoryInterface {
     findAll(): Promise<UserModel[]>;
     create(userModel: UserModel): Promise<UserModel>;
     update(userModel: UserModel, tx?: any): Promise<UserModel>;
+    updateWithVersion(userModel: UserModel, tx?: any): Promise<UserModel>;
     delete(id: number, tx?: any): Promise<UserModel>;
 }
 

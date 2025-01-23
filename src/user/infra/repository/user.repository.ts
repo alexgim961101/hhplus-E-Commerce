@@ -44,6 +44,17 @@ export class UserRepository implements UserRepositoryInterface {
         });
         return this.userMapper.toDomain(user);
     }
+    async updateWithVersion(userModel: UserModel, tx?: any): Promise<UserModel> {
+        const prisma = tx || this.prisma;
+        const user = await prisma.user.update({
+            where: { id: userModel.id, version: userModel.version },
+            data: {
+                points: userModel.points,
+                version: { increment: 1 }
+            }
+        });
+        return this.userMapper.toDomain(user);
+    }
     async delete(id: number): Promise<UserModel> {
         const user = await this.prisma.user.delete({ where: { id } });
         return this.userMapper.toDomain(user);
