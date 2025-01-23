@@ -1,10 +1,19 @@
 import * as fs from "fs";
 import { MySqlContainer } from "@testcontainers/mysql";
 import { PrismaClient } from "@prisma/client";
-
+import { RedisContainer } from "@testcontainers/redis";
 const init = async () => {
-  await Promise.all([initMysql()]);
+  await Promise.all([initMysql(), initRedis()]);
 };
+
+const initRedis = async () => {
+  const redis = await new RedisContainer("redis:alpine")
+    .withExposedPorts(6379)
+    .withName("test-redis")
+    .start();
+
+  global.redis = redis;
+}
 
 const initMysql = async () => {
   const mysql = await new MySqlContainer("mysql:8")

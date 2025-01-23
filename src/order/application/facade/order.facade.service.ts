@@ -6,6 +6,8 @@ import { PrismaService } from "@/prisma/prisma.service";
 import { OrderProductReqDto } from "@/order/presentation/dto/request/order-product.dto";
 import { OrderStatus } from "@/order/domain/model/order";
 import { OrderProductRespDto } from "@/order/presentation/dto/response/order-product.dto";
+import { DistributedLock } from "@/common/lock/distributed-lock.decorator";
+import { LockService } from "@/common/lock/lock.service";
 
 @Injectable()
 export class OrderFacadeService {
@@ -16,17 +18,22 @@ export class OrderFacadeService {
     private readonly orderService: OrderService,
     private readonly productService: ProductService,
     private readonly couponService: CouponService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private readonly lockService: LockService
   ) {}
 
   async orderProduct(orderProductReqDto: OrderProductReqDto): Promise<OrderProductRespDto> {
-    return this.prisma.runInTransaction(async (tx) => {
-      let subTotalPrice = 0;
+
+    let lock: string | null = null;
+    try {
+      lock = await this.lockService.acquireLockWithWait('lock:product', 30, 10000);
+      return this.prisma.runInTransaction(async (tx) => {
+        let subTotalPrice = 0;
       let discountAmount = 0;
 
       // 주문한 상품들에 대한 정보 가져오기
       const productList = await Promise.all(orderProductReqDto.products.map(async (product) => {
-        const orderProduct = await this.productService.getProductWithLock(product.productId, tx);
+        const orderProduct = await this.productService.getProductWithModel(product.productId, tx);
         await this.productService.decreaseStock(orderProduct, product.amount, tx);
 
         // 전체 가격 확인
@@ -82,8 +89,13 @@ export class OrderFacadeService {
         products: productList,
         sum: subTotalPrice,
         discount: discountAmount,
-        total: subTotalPrice - discountAmount
-      }
-    });
+          total: subTotalPrice - discountAmount
+        }
+      });
+    } catch (error) {
+      throw new BadRequestException('상품 주문에 실패했습니다.');
+    } finally {
+      await this.lockService.releaseLock('lock:product', lock);
+    }
   }
 }
