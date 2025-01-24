@@ -10,6 +10,7 @@ import { DistributedLock } from "@/common/lock/distributed-lock.decorator";
 import { LockService } from "@/common/lock/lock.service";
 import { RedlockService } from "@/common/lock/redlock.service";
 
+
 @Injectable()
 export class OrderFacadeService {
 
@@ -21,9 +22,11 @@ export class OrderFacadeService {
     private readonly couponService: CouponService,
     private readonly prisma: PrismaService,
     private readonly redlockService: RedlockService
+
   ) {}
 
   async orderProduct(orderProductReqDto: OrderProductReqDto): Promise<OrderProductRespDto> {
+
 
     const lockKey = `lock:product:${orderProductReqDto.products.map(p => p.productId).join('-')}`;
     const lock = await this.redlockService.acquireLock(lockKey, 30);
@@ -97,6 +100,7 @@ export class OrderFacadeService {
       throw new BadRequestException('상품 주문에 실패했습니다.');
     } finally {
       await this.redlockService.releaseLock(lock);
+
     }
   }
 }

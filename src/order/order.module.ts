@@ -11,6 +11,7 @@ import { OrderProductPrismaRepository } from "@/order/infra/repository/order-pro
 import { LockModule } from "@/common/lock/lock.module";
 import { RedlockService } from "@/common/lock/redlock.service";
 
+
 @Module({
   imports: [ProductModule, CouponModule, LockModule],
   providers: [

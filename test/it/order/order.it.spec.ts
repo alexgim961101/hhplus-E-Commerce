@@ -23,7 +23,7 @@ import { LockService } from '@/common/lock/lock.service';
 import { LockModule } from '@/common/lock/lock.module';
 import { RedisModule, RedisService } from '@songkeys/nestjs-redis';
 import { RedlockService } from '@/common/lock/redlock.service';
-import { AppModule } from '@/app.module';
+
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;
@@ -54,6 +54,7 @@ describe('상품 주문 통합 테스트', () => {
     couponService = module.get<CouponService>(CouponService);
     prisma = module.get<PrismaService>(PrismaService);
     redlockService = module.get<RedlockService>(RedlockService);
+
     await prisma.orderProduct.deleteMany();
     await prisma.orders.deleteMany();
     await prisma.product.deleteMany();

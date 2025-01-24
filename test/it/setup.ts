@@ -15,6 +15,7 @@ const initRedis = async () => {
 
   process.env.REDIS_HOST = redis.getHost();
   process.env.REDIS_PORT = redis.getMappedPort(6379).toString();
+
 }
 
 const initMysql = async () => {

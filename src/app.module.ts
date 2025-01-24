@@ -16,6 +16,7 @@ import { LockModule } from "./common/lock/lock.module";
 import { RedisModule } from "@songkeys/nestjs-redis";
 import { RedlockService } from "./common/lock/redlock.service";
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({ 
