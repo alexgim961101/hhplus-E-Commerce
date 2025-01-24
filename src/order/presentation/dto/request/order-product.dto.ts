@@ -13,7 +13,7 @@ export class OrderProductItemDto {
   @ApiProperty({
     description: '주문 수량',
     example: 2
-  })
+  })  
   @IsNumber()
   amount: number;
 }

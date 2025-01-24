@@ -19,6 +19,9 @@ import { CouponService } from '@/coupon/domain/service/coupon.service';
 import { OrderService } from '@/order/domain/service/order.service';
 import { CreateUserReqDto } from '@/user/presentation/dto/request/create-user-req.dto';
 import { OrderProductReqDto } from '@/order/presentation/dto/request/order-product.dto';
+import { LockService } from '@/common/lock/lock.service';
+import { LockModule } from '@/common/lock/lock.module';
+import { RedisModule, RedisService } from '@songkeys/nestjs-redis';
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;
@@ -26,13 +29,19 @@ describe('상품 주문 통합 테스트', () => {
   let userService: UserService;
   let productService: ProductService;
   let couponService: CouponService;
+  let lockService: LockService;
   let prisma: PrismaService;
   let module: TestingModule;
 
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [UserModule, ProductModule, CouponModule, PrismaModule, OrderModule, WinstonModule.forRoot(winstonConfig)]
+      imports: [LockModule, UserModule, ProductModule, CouponModule, PrismaModule, OrderModule, WinstonModule.forRoot(winstonConfig), RedisModule.forRoot({
+        config: {
+          host: 'localhost',
+          port: 6379
+        }
+      })]
     }).compile()
 
     orderFacadeService = module.get<OrderFacadeService>(OrderFacadeService);
@@ -41,7 +50,7 @@ describe('상품 주문 통합 테스트', () => {
     productService = module.get<ProductService>(ProductService);
     couponService = module.get<CouponService>(CouponService);
     prisma = module.get<PrismaService>(PrismaService);
-
+    lockService = module.get<LockService>(LockService);
     await prisma.orderProduct.deleteMany();
     await prisma.orders.deleteMany();
     await prisma.product.deleteMany();
@@ -91,6 +100,7 @@ describe('상품 주문 통합 테스트', () => {
         })
       })
 
+      console.log(successCount, failCount);
       expect(successCount).toBe(2);
       expect(failCount).toBe(1);
     });

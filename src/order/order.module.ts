@@ -8,9 +8,10 @@ import { ProductModule } from "@/product/product.module";
 import { CouponModule } from "@/coupon/coupon.module";
 import { ORDER_PRODUCT_REPOSITORY } from "@/order/domain/repository/order-product.repository";
 import { OrderProductPrismaRepository } from "@/order/infra/repository/order-product.prisma.repository";
+import { LockModule } from "@/common/lock/lock.module";
 
 @Module({
-  imports: [ProductModule, CouponModule],
+  imports: [ProductModule, CouponModule, LockModule],
   providers: [
     OrderService,
     OrderFacadeService,
@@ -21,7 +22,7 @@ import { OrderProductPrismaRepository } from "@/order/infra/repository/order-pro
     {
       provide: ORDER_PRODUCT_REPOSITORY,
       useClass: OrderProductPrismaRepository,
-    },  
+    }
   ],
   controllers: [OrderController],
   exports: [OrderFacadeService, OrderService],

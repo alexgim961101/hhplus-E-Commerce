@@ -5,17 +5,20 @@ type UserModelProps = {
     points?: number;
     createdAt?: Date;
     updatedAt?: Date;
+    version?: number;
 }
 
 export class UserModel {
     id?: number;
     points?: number;
+    version?: number;
     createdAt?: Date;
     updatedAt?: Date;
 
     constructor(props: UserModelProps) {
         this.id = props.id;
         this.points = props.points;
+        this.version = props.version;
         this.createdAt = props.createdAt;
         this.updatedAt = props.updatedAt;
     }
@@ -32,5 +35,9 @@ export class UserModel {
             throw new BadRequestException('포인트는 양수여야 합니다.');
         }
         this.points += amount;
+    }
+
+    incrementVersion() {
+        this.version++;
     }
 }

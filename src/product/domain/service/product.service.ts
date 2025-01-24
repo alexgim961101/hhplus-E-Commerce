@@ -34,6 +34,10 @@ export class ProductService {
         return ProductDetailRespDto.fromDomain(product);
     }
 
+    async getProductWithModel(productId: number, tx?: any): Promise<ProductModel> {
+        return await this.productRepository.findById(productId, tx);
+    }
+    
     async getProductWithLock(productId: number, tx: any): Promise<ProductModel> {
         try {
             const product = await this.productRepository.findByIdWithLock(productId, tx);
