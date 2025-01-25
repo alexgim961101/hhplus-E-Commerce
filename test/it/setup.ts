@@ -11,8 +11,11 @@ const initRedis = async () => {
     .withExposedPorts(6379)
     .withName("test-redis")
     .start();
-
   global.redis = redis;
+
+  process.env.REDIS_HOST = redis.getHost();
+  process.env.REDIS_PORT = redis.getMappedPort(6379).toString();
+
 }
 
 const initMysql = async () => {

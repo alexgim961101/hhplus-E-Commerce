@@ -22,6 +22,8 @@ import { OrderProductReqDto } from '@/order/presentation/dto/request/order-produ
 import { LockService } from '@/common/lock/lock.service';
 import { LockModule } from '@/common/lock/lock.module';
 import { RedisModule, RedisService } from '@songkeys/nestjs-redis';
+import { RedlockService } from '@/common/lock/redlock.service';
+
 
 describe('상품 주문 통합 테스트', () => {
   let orderFacadeService: OrderFacadeService;
@@ -29,19 +31,20 @@ describe('상품 주문 통합 테스트', () => {
   let userService: UserService;
   let productService: ProductService;
   let couponService: CouponService;
-  let lockService: LockService;
+  let redlockService: RedlockService;
   let prisma: PrismaService;
   let module: TestingModule;
 
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [LockModule, UserModule, ProductModule, CouponModule, PrismaModule, OrderModule, WinstonModule.forRoot(winstonConfig), RedisModule.forRoot({
+      imports: [UserModule, ProductModule, CouponModule, PrismaModule, OrderModule, WinstonModule.forRoot(winstonConfig), RedisModule.forRoot({
         config: {
-          host: 'localhost',
-          port: 6379
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT)
         }
-      })]
+      })],
+      providers: [RedlockService]
     }).compile()
 
     orderFacadeService = module.get<OrderFacadeService>(OrderFacadeService);
@@ -50,7 +53,8 @@ describe('상품 주문 통합 테스트', () => {
     productService = module.get<ProductService>(ProductService);
     couponService = module.get<CouponService>(CouponService);
     prisma = module.get<PrismaService>(PrismaService);
-    lockService = module.get<LockService>(LockService);
+    redlockService = module.get<RedlockService>(RedlockService);
+
     await prisma.orderProduct.deleteMany();
     await prisma.orders.deleteMany();
     await prisma.product.deleteMany();
@@ -103,6 +107,6 @@ describe('상품 주문 통합 테스트', () => {
       console.log(successCount, failCount);
       expect(successCount).toBe(2);
       expect(failCount).toBe(1);
-    });
+    }, 10000);
   });
 });

@@ -8,6 +8,8 @@ import { OrderStatus } from "@/order/domain/model/order";
 import { OrderProductRespDto } from "@/order/presentation/dto/response/order-product.dto";
 import { DistributedLock } from "@/common/lock/distributed-lock.decorator";
 import { LockService } from "@/common/lock/lock.service";
+import { RedlockService } from "@/common/lock/redlock.service";
+
 
 @Injectable()
 export class OrderFacadeService {
@@ -19,14 +21,16 @@ export class OrderFacadeService {
     private readonly productService: ProductService,
     private readonly couponService: CouponService,
     private readonly prisma: PrismaService,
-    private readonly lockService: LockService
+    private readonly redlockService: RedlockService
+
   ) {}
 
   async orderProduct(orderProductReqDto: OrderProductReqDto): Promise<OrderProductRespDto> {
 
-    let lock: string | null = null;
+
+    const lockKey = `lock:product:${orderProductReqDto.products.map(p => p.productId).join('-')}`;
+    const lock = await this.redlockService.acquireLock(lockKey, 30);
     try {
-      lock = await this.lockService.acquireLockWithWait('lock:product', 30, 10000);
       return this.prisma.runInTransaction(async (tx) => {
         let subTotalPrice = 0;
       let discountAmount = 0;
@@ -95,7 +99,8 @@ export class OrderFacadeService {
     } catch (error) {
       throw new BadRequestException('상품 주문에 실패했습니다.');
     } finally {
-      await this.lockService.releaseLock('lock:product', lock);
+      await this.redlockService.releaseLock(lock);
+
     }
   }
 }

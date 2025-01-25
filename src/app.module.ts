@@ -14,6 +14,8 @@ import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
 import { GlobalExceptionFilter } from "./common/filter/global-exception.filter";
 import { LockModule } from "./common/lock/lock.module";
 import { RedisModule } from "@songkeys/nestjs-redis";
+import { RedlockService } from "./common/lock/redlock.service";
+
 
 @Module({
   imports: [
@@ -48,7 +50,9 @@ import { RedisModule } from "@songkeys/nestjs-redis";
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter
-    }
+    },
+    RedlockService
   ],
+  exports: [RedlockService]
 })
 export class AppModule {}
