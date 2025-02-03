@@ -15,6 +15,7 @@ import { GlobalExceptionFilter } from "./common/filter/global-exception.filter";
 import { LockModule } from "./common/lock/lock.module";
 import { RedisModule } from "@songkeys/nestjs-redis";
 import { RedlockService } from "./common/lock/redlock.service";
+import { PaymentModule } from "./payment/payment.module";
 
 
 @Module({
@@ -39,7 +40,8 @@ import { RedlockService } from "./common/lock/redlock.service";
     PointModule,
     ProductModule,
     CouponModule,
-    OrderModule
+    OrderModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [

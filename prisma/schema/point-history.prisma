@@ -6,6 +6,7 @@ enum TransactionType {
 model PointHistory {
     id        Int      @id @default(autoincrement())
     userId    Int
+    paymentId Int?
     points    Int
     transactionType TransactionType
     createdAt DateTime @default(now())
