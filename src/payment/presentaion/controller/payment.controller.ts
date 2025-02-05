@@ -1,7 +1,19 @@
-import { Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { CreatePaymentReqDto } from "@/payment/presentaion/dto/request/create-payment.dto";
+import { PaymentFacadeService } from "@/payment/application/payment.facade";
+import { CreatePaymentResDto } from "@/payment/presentaion/dto/response/create-payment.dto";
 
 @Controller('payment')
 export class PaymentController {
+
+    constructor(
+        private readonly paymentFacadeService: PaymentFacadeService
+    ) {}
+
+    @Get()
+    async getPaymentHeathCheck() {
+        return 'ok';
+    }
 
     /**
      * 결제 생성
@@ -18,5 +30,10 @@ export class PaymentController {
      * - 결제 실패 시, 예외 처리 및 예외 메시지 반환
      */
     @Post()
-    async createPayment() {}
+    async postPayment(@Body() createPaymentReqDto: CreatePaymentReqDto) {
+
+        const payment = await this.paymentFacadeService.createPayment(createPaymentReqDto.orderId, createPaymentReqDto.paymentMethod);
+
+        return new CreatePaymentResDto(payment);
+    }
 }
