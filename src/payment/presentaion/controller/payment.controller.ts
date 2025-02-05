@@ -32,7 +32,7 @@ export class PaymentController {
     @Post()
     async postPayment(@Body() createPaymentReqDto: CreatePaymentReqDto) {
 
-        const payment = await this.paymentFacadeService.createPayment(createPaymentReqDto.orderId, createPaymentReqDto.paymentMethod);
+        const payment = await this.paymentFacadeService.createPayment(createPaymentReqDto.userId, createPaymentReqDto.orderId, createPaymentReqDto.paymentMethod);
 
         return new CreatePaymentResDto(payment);
     }

@@ -17,7 +17,6 @@ import { RedisModule } from "@songkeys/nestjs-redis";
 import { RedlockService } from "./common/lock/redlock.service";
 import { PaymentModule } from "./payment/payment.module";
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({ 
@@ -53,7 +52,7 @@ import { PaymentModule } from "./payment/payment.module";
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter
     },
-    RedlockService
+    RedlockService,
   ],
   exports: [RedlockService]
 })

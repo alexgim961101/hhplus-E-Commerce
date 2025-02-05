@@ -6,16 +6,21 @@ import { PaymentRepository } from "@/payment/infra/repository/payment.repository
 import { PaymentService } from "@/payment/domain/service/payment.service";
 import { OrderModule } from "@/order/order.module";
 import { PointModule } from "@/point/point.module";
+import { PaymentMapper } from "@/payment/infra/mapper/payment.mapper";
+import { MockService } from "@/common/mock/mock.service";
+import { HttpModule } from "@nestjs/axios";
 
 @Module({
-    imports: [OrderModule, PointModule],
+    imports: [OrderModule, PointModule, HttpModule],
     providers: [
         PaymentFacadeService, 
         {
             provide: PAYMENT_REPOSITORY,
             useClass: PaymentRepository
         },
-        PaymentService
+        PaymentService,
+        PaymentMapper,
+        MockService
     ],
     controllers: [PaymentController],
 })

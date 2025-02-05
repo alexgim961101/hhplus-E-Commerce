@@ -17,5 +17,6 @@ import { PointFacade } from "@/point/application/facade/point.facade";
         PointMapper
     ],
     controllers: [PointController],
+    exports: [PointService]
 })
 export class PointModule{}

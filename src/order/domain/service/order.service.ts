@@ -64,4 +64,9 @@ export class OrderService {
             throw error;
         }
     }
+
+    async getOrderAmount(orderId: number, tx: any): Promise<number> {
+        const order = await this.orderRepository.findById(orderId, tx);
+        return order.orderTotal;
+    }
 }
