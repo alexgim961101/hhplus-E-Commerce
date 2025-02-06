@@ -4,7 +4,8 @@ import { CouponHistoryRepository } from "@/coupon/domain/repository/coupon-histo
 import { CouponModel, DiscountType } from "@/coupon/domain/model/coupon";
 import { CouponHistoryModel } from "@/coupon/domain/model/coupon-history";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
-
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 @Injectable()
 export class CouponService {
     constructor(
@@ -13,11 +14,21 @@ export class CouponService {
         @Inject(CouponHistoryRepository)
         private readonly couponHistoryRepository: CouponHistoryRepository,
         @Inject(WINSTON_MODULE_PROVIDER)
-        private readonly logger: Logger
+        private readonly logger: Logger,
+        @Inject(CACHE_MANAGER) 
+        private cacheManager: Cache
     ) {}
 
     async getCouponList(userId: number, page: number, limit: number): Promise<CouponModel[]> {
-        return await this.couponHistoryRepository.findAvailableCouponByUserId(userId, page, limit);
+        const cacheKey = `coupon_list_${userId}_${page}_${limit}`;
+        const cachedCouponList = await this.cacheManager.get(cacheKey);
+        if (cachedCouponList) {
+            return cachedCouponList as CouponModel[];
+        }
+
+        const couponList = await this.couponHistoryRepository.findAvailableCouponByUserId(userId, page, limit);
+        await this.cacheManager.set(cacheKey, couponList);
+        return couponList;
     }
 
     async getCoupon(couponId: number, tx?: any): Promise<CouponModel> {

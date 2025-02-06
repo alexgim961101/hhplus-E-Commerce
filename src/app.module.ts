@@ -16,6 +16,7 @@ import { LockModule } from "./common/lock/lock.module";
 import { RedisModule } from "@songkeys/nestjs-redis";
 import { RedlockService } from "./common/lock/redlock.service";
 import { PaymentModule } from "./payment/payment.module";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
   imports: [
@@ -31,6 +32,11 @@ import { PaymentModule } from "./payment/payment.module";
           host: 'localhost',
           port: 6379
       }
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      host: 'localhost',
+      port: 6379
     }),
     WinstonModule.forRoot(winstonConfig),
     LockModule,
