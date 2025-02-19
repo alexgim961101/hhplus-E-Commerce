@@ -309,3 +309,21 @@ sequenceDiagram
 
 ## Cache 정리
 - 캐시 및 캐시 사용 지점 정리: https://gifted-friend-618.notion.site/Redis-189123165b7880a39839f1b448831816?pvs=4
+
+## Kafka 정리 및 연결 확인
+- 정리: https://gifted-friend-618.notion.site/Kafka-19f123165b7880d1a909fe4bf503b618?pvs=4
+- kafka 연결 확인
+![alt text](<Screenshot from 2025-02-20 00-40-00.png>)
+![alt text](<Screenshot from 2025-02-20 00-41-02.png>)
+
+실제로 POST localhost:3000/test API에 임의의 Body값(json)을 넣고 보내면 consumer에서 해당 Body 값을 로그로 출력한다.
+
+```
+curl --location 'http://localhost:3000/test/send-message' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "alex"
+}'
+
+--> Consumer를 통해 콘솔에 data 출력
+```
