@@ -8,17 +8,18 @@ import { ProductModule } from "@/product/product.module";
 import { CouponModule } from "@/coupon/coupon.module";
 import { OrderModule } from "@/order/order.module";
 import { WinstonModule } from "nest-winston";
-import { winstonConfig } from "./common/logger/winston.config";
+import { winstonConfig } from "@/common/logger/winston.config";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
-import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
-import { GlobalExceptionFilter } from "./common/filter/global-exception.filter";
-import { LockModule } from "./common/lock/lock.module";
+import { LoggingInterceptor } from "@/common/interceptor/logging.interceptor";
+import { GlobalExceptionFilter } from "@/common/filter/global-exception.filter";
+import { LockModule } from "@/common/lock/lock.module";
 import { RedisModule } from "@songkeys/nestjs-redis";
-import { RedlockService } from "./common/lock/redlock.service";
-import { PaymentModule } from "./payment/payment.module";
+import { RedlockService } from "@/common/lock/redlock.service";
+import { PaymentModule } from "@/payment/payment.module";
 import { CacheModule } from "@nestjs/cache-manager";
-import { KafkaModule } from "./kafka/kafka.module";
-import { TestModule } from "./testApi/test.module";
+import { KafkaModule } from "@/kafka/kafka.module";
+import { TestModule } from "@/testApi/test.module";
+import { OutboxModule } from "@/common/outbox/outbox.module";
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { TestModule } from "./testApi/test.module";
     CouponModule,
     OrderModule,
     PaymentModule,
-    TestModule
+    TestModule,
+    OutboxModule
   ],
   controllers: [],
   providers: [
