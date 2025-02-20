@@ -17,6 +17,8 @@ import { RedisModule } from "@songkeys/nestjs-redis";
 import { RedlockService } from "./common/lock/redlock.service";
 import { PaymentModule } from "./payment/payment.module";
 import { CacheModule } from "@nestjs/cache-manager";
+import { KafkaModule } from "./kafka/kafka.module";
+import { TestModule } from "./testApi/test.module";
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { CacheModule } from "@nestjs/cache-manager";
       host: 'localhost',
       port: 6379
     }),
+    KafkaModule,
     WinstonModule.forRoot(winstonConfig),
     LockModule,
     PrismaModule,
@@ -47,6 +50,7 @@ import { CacheModule } from "@nestjs/cache-manager";
     CouponModule,
     OrderModule,
     PaymentModule,
+    TestModule
   ],
   controllers: [],
   providers: [

@@ -5,6 +5,7 @@ import * as fs from "fs";
 import { ValidationPipe } from "@nestjs/common";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
+import { Transport } from "@nestjs/microservices";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,19 @@ async function bootstrap() {
     .addTag("Payment")
     .addTag("Order")
     .build();
+
+  app.connectMicroservice({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: ['localhost:9092'],
+      },
+      consumer: {
+        groupId: 'nestjs-kafka-consumer',
+      }
+    }
+  });
+  app.startAllMicroservices();
 
   const document = SwaggerModule.createDocument(app, config);
 
