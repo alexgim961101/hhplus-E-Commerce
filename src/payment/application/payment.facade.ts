@@ -5,6 +5,9 @@ import { OrderService } from "@/order/domain/service/order.service";
 import { PointService } from "@/point/domain/service/point.service";
 import { MockService } from "@/common/mock/mock.service";
 import { PrismaService } from "@/prisma/prisma.service";
+import { OutboxService } from "@/common/outbox/domain/service/outbox.service";
+import { Status } from "@/common/outbox/domain/model/outbox";
+import { KafkaProducerService } from "@/kafka/kafka-producer.service";
 
 @Injectable()
 export class PaymentFacadeService {
@@ -13,7 +16,9 @@ export class PaymentFacadeService {
         private readonly paymentService: PaymentService,
         private readonly orderService: OrderService,
         private readonly pointService: PointService,
-        private readonly mockService: MockService
+        private readonly mockService: MockService,
+        private readonly outboxService: OutboxService,
+        private readonly kafkaProducerService: KafkaProducerService
     ) {}
 
     /**
@@ -37,8 +42,16 @@ export class PaymentFacadeService {
             // 포인트 삭감
             await this.pointService.savePointHistory(userId, amount, 'use', tx);
 
-            // Mock API 호출
-            this.mockService.sendPaymentInfo(payment.id);
+            // Mock Platform에 이벤트 발행
+            // 1. Outbox 테이블에 레코드 생성
+            await this.outboxService.createOutbox({
+                topic: 'payment',
+                message: JSON.stringify(payment),
+                status: Status.QUEUED
+            }, tx);
+
+            // 2. Mock Platform에 이벤트 발행
+            this.kafkaProducerService.sendMessage('payment', JSON.stringify(payment));
 
             return payment;
         });

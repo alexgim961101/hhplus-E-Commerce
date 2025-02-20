@@ -9,6 +9,7 @@ import { PointModule } from "@/point/point.module";
 import { PaymentMapper } from "@/payment/infra/mapper/payment.mapper";
 import { MockService } from "@/common/mock/mock.service";
 import { HttpModule } from "@nestjs/axios";
+import { OutboxService } from "@/common/outbox/domain/service/outbox.service";
 
 @Module({
     imports: [OrderModule, PointModule, HttpModule],
@@ -20,7 +21,8 @@ import { HttpModule } from "@nestjs/axios";
         },
         PaymentService,
         PaymentMapper,
-        MockService
+        MockService,
+        OutboxService,
     ],
     controllers: [PaymentController],
 })
