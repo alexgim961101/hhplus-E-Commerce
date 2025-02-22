@@ -1,0 +1,15 @@
+enum Status {
+    queued
+    processed
+    skipped
+}
+
+model OutBox {
+    id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+    topic String @db.VarChar(255)
+    dbKey String? @map("key") @db.VarChar(255)
+    message String   @db.Text
+    status Status
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+}

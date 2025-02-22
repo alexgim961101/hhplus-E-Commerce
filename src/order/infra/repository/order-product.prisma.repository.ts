@@ -2,6 +2,7 @@ import { OrderProductModel } from "@/order/domain/model/order-product";
 import { IOrderProductRepository } from "@/order/domain/repository/order-product.repository";
 import { PrismaService } from "@/prisma/prisma.service";
 import { Injectable } from "@nestjs/common";
+import { OrderProductMapper } from "../mapper/order-producr.mapper";
 
 @Injectable()
 export class OrderProductPrismaRepository implements IOrderProductRepository {
